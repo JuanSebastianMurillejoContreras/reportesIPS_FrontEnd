@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
-import { ReporteComponent } from './reporte-component/reporte-component.component';
+import { ReportePrimeraInfanciaComponent } from './primera Infancia-component/reporte-component.component';
 
 
 export const pagesRoutes: Routes = [
-  { path: 'report', component: ReporteComponent }
+  { path: 'report', component: ReportePrimeraInfanciaComponent }
 ];

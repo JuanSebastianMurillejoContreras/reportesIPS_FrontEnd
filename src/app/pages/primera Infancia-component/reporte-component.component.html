@@ -1,22 +1,21 @@
 <div class="contenido">
     <h1>Reporte citas</h1> 
-    <p>Aquí encontrarás el reporte de todas las citas</p>
-
+  </div>
     <div style="display: flex; justify-content: flex-end;">
-      <a href="">
+      <a href="#" (click)="descargarArchivoExcel($event)" title="Descargar Excel">
         <img width="48" height="48"
              src="https://img.icons8.com/material/48/40C057/ms-excel--v1.png"
              alt="ms-excel--v1" />
       </a>
     </div>
     
-    
     <mat-form-field appearance="fill">
       <mat-label>Buscar</mat-label>
       <input matInput (keyup)="applyFilter($event)" placeholder="Busca nombres, apellidos, cédulas o cualquier dato que requieras" #input>
     </mat-form-field>
 
-</div>
+
+
 <table mat-table [dataSource]="datos" class="mat-elevation-z8">
   <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna">
     <th mat-header-cell *matHeaderCellDef class="sticky-header">{{ columna }}</th>
@@ -34,7 +33,7 @@
 <mat-paginator 
   class="paginador-flotante"
   *ngIf="!isFiltering" 
-  [pageSizeOptions]="[5, 10, 25, 100]" 
+  [pageSizeOptions]="[5, 10, 25, 100, 1000]" 
   [pageSize]="pageSize" 
   [length]="totalItems" 
   (page)="cambiarPagina($event)" 
