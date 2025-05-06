@@ -1,0 +1,47 @@
+.mat-table {
+    width: 100%;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    display: block;
+    margin-bottom: 800px; /* Espacio para el paginador */
+    padding-bottom: 60px; /* <- Añade este si quieres más margen interno */
+  }
+  
+  h1 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #2c3e50;
+    text-align: center;
+    margin: 20px 0 30px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #3498db; /* Corregido: falta valor en px */
+  }
+  
+  .mat-mdc-form-field {
+    font-size: 14px;
+    width: 100%;
+  }
+  
+  .sticky-header {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  
+   
+  .paginador-flotante {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.95); /* Blanco semi-transparente */
+    padding: 4px 0;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+  
+  
