@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "hce": {
+    "reportes": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/hce",
+            "outputPath": "dist/reportes",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -66,10 +66,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "hce:build:production"
+              "buildTarget": "reportes:build:production"
             },
             "development": {
-              "buildTarget": "hce:build:development"
+              "buildTarget": "reportes:build:development"
             }
           },
           "defaultConfiguration": "development"

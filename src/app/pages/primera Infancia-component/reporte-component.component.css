@@ -1,50 +1,148 @@
 .mat-table {
-    width: 50%;
-    max-height: calc(100vh - 120px);
-    overflow-y: auto;
-    display: block;
-    margin: 10px 10px 10px 10px;
-  }
-  
-  h1 {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 2rem;
-    font-weight: 600;
-    color: #2c3e50;
-    text-align: left;
-    margin: 20px 10px 10px 30px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #3498db; /* Corregido: falta valor en px */
-  }
+  width: 100%;
+  max-height: calc(100vh - 2000px);
+  overflow-y: auto;
+  display: block;
+  margin: 10px 10px 10px 10px;
+}
 
-  .mat-mdc-header-cell {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #2c3e50;
-    font-weight: bolder;
-  }
-  
- 
+.titulos {
+  display: flex;
+  align-items: flex-start;  /* Alinea la imagen y los títulos al inicio */
+  margin: 20px;
+  gap: 20px;  /* Añade espacio entre la imagen y los textos */
+}
 
-  .mat-mdc-form-field {
-    font-size: 14px;
+.textos {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;  /* Alinea los títulos a la izquierda */
+}
+
+.logo img {
+  margin: 10px 0px 0px 20px;
+}
+
+
+h1 {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #2c3e50;
+  text-align: left;
+  margin: 0px 0px 0px 20px;
+}
+
+span {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2c3e50;
+  text-align: left;
+  margin: 0px 0px 0px 20px;
+}
+
+p{
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1rem;
+  color: #2c3e50;
+  text-align: left;
+  margin: 10px 0px 0px 20px;
+}
+
+.mat-mdc-header-cell {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #2c3e50;
+  font-weight: bolder;
+  text-align: center;  /* Asegura que los encabezados estén centrados */
+  vertical-align: middle;  /* Alinea el texto verticalmente en el centro */
+}
+
+.mat-mdc-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.sticky-header {
+  position: sticky;
+  top: 0;
+  background: linear-gradient(to right, #77b4e0, #bbdefb);
+  color: #2c3e50;
+  text-transform: uppercase;
+  border-top:  2px solid #2c3e50;
+  border-bottom: 2px solid #2c3e50;
+  padding: 2px 4px;
+  text-align: center; /* Centrado de los textos en el header */
+}
+
+.paginador-flotante {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 1); /* Blanco semi-transparente */
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Centra la tabla en la página */
+.filter-table {
+  width: 90%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  display: table;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Estilo de las celdas */
+.filter-table td {
+  padding: 15px;
+  vertical-align: top;
+  text-align: left;
+  width: 16%;
+}
+
+/* Estilo de los campos del formulario */
+.mat-form-field {
+  width: 100%;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.mat-form-field mat-label {
+  font-weight: 500;
+  color: #333;
+}
+
+.mat-form-field input {
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+/* Estilo al pasar el mouse sobre los campos */
+.mat-form-field:hover, .mat-form-field:focus-within {
+  box-shadow: 0 0 5px 2px rgba(0, 122, 204, 0.5);
+}
+
+/* Estilo de enfoque para los campos */
+.mat-form-field input:focus {
+  border-color: #007acc;
+  box-shadow: 0 0 5px 2px rgba(0, 122, 204, 0.3);
+}
+
+/* Estilo de la tabla para pantallas más pequeñas */
+@media (max-width: 768px) {
+  .filter-table {
     width: 100%;
   }
-  
-  .sticky-header {
-    position: sticky;
-    top: 0;
-    background-color: #fff;
-    z-index: 10;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  .filter-table td {
+    width: 50%; /* Reducir el ancho de las celdas para pantallas más pequeñas */
   }
-  
-     
-  .paginador-flotante {
-    position:fixed;
-    bottom: 0;
-    width: 100%;
-    background-color: rgba(255, 255, 255, 0.75); /* Blanco semi-transparente */
-    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  
+}
+
+/* Estilo para los íconos de la fecha */
+.mat-datepicker-toggle {
+  margin-right: 10px;
+}

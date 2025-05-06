@@ -7,11 +7,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+
 
 @Component({
   selector: 'app-reporte-component',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatTableModule, MatPaginatorModule],
+  imports: [CommonModule, MatTableModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatTableModule, MatPaginatorModule, MatDatepickerModule, MatNativeDateModule],
   templateUrl: './reporte-component.component.html',
   styleUrls: ['./reporte-component.component.css']
 })
@@ -27,7 +30,6 @@ export class ReportePrimeraInfanciaComponent implements OnInit {
 
   datosOriginales: any[] = []; // Copia completa de los datos para el filtro
   isFiltering: boolean = false; // Indica si el usuario está filtrando
-
 
   constructor(
     private reporteCitasService: ReporteCitasService,

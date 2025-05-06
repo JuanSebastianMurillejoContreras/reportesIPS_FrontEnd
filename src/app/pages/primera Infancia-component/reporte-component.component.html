@@ -1,6 +1,14 @@
 <div class="contenido">
-    <h1>Reporte citas</h1> 
-  </div>
+
+  <div class="titulos">
+    <div class="logo">
+        <img src="the_wala_ips_logo.jpg" width="80">   
+    </div>
+    <div class="textos">
+        <h1>Reporte citas</h1> 
+        <span>Aquí encontrarás el reporte de todas las citas de la IPSI</span>
+        <p>Puedes buscar por los parámetros que consideres necesarios para buscar por cita, por paciente o por profesional.</p>
+    </div>
     <div style="display: flex; justify-content: flex-end;">
       <a href="#" (click)="descargarArchivoExcel($event)" title="Descargar Excel">
         <img width="48" height="48"
@@ -8,12 +16,55 @@
              alt="ms-excel--v1" />
       </a>
     </div>
-    
-    <mat-form-field appearance="fill">
-      <mat-label>Buscar</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Busca nombres, apellidos, cédulas o cualquier dato que requieras" #input>
-    </mat-form-field>
+</div>
 
+    
+    
+
+    <table class="filter-table">
+      <tr>
+        <td>
+          <mat-form-field class="example-full-width">
+            <mat-label>Id cita</mat-label>
+            <input matInput>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field class="example-full-width">
+            <mat-label>Ingrese la fecha</mat-label>
+            <input matInput [matDatepicker]="picker">
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field class="example-full-width">
+            <mat-label>Numero identificación</mat-label>
+            <input matInput>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field class="example-full-width">
+            <mat-label>Nombre paciente</mat-label>
+            <input matInput>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field class="example-full-width">
+            <mat-label>Medico</mat-label>
+            <input matInput>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field class="example-full-width">
+            <mat-label>CUP</mat-label>
+            <input matInput>
+          </mat-form-field>
+        </td>
+      </tr>
+    </table>
+    
+  
 
 
 <table mat-table [dataSource]="datos" class="mat-elevation-z8">
