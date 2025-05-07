@@ -1,6 +1,6 @@
 <div class="example-container">
     <mat-toolbar class="example-toolbar">
-        <button mat-icon-button (click)="sidenav.toggle()">
+        <button mat-icon-button class="white-icon-button"  mat-icon-button (click)="sidenav.toggle()">
             @if (!sidenav.opened) {
                 <mat-icon>menu</mat-icon>
             }@else {
@@ -11,7 +11,7 @@
 
         <span class="example-spacer"></span>
 
-        <button mat-icon-button [matMenuTriggerFor]="menu">
+        <button mat-icon-button class="white-icon-button" mat-icon-button [matMenuTriggerFor]="menu">
             <mat-icon>more_vert</mat-icon>
         </button>
 

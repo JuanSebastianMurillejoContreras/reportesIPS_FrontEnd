@@ -8,26 +8,27 @@
     right: 0;
 }
 
+
 .example-sidenav-container {
     flex: 1;
 }
+
+.mat-toolbar {
+    background: linear-gradient(to right, #305e23, #a4e272); /* Degradado verde hacia la izquierda */
+    color: white;
+  }
+
+  .white-icon-button mat-icon {
+    color: white;
+  }
 
 .example-spacer {
     flex: 1 1 auto;
 }
 
 .active {
-    background-color: #9cb0c0c1;
+    background-color: #ffffffc1;
 }
-
-h1 {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-weight: 600;
-    color: #2c3e50;
-    font:bold;
-    margin: 10px 10px 10px 10px;
-  }
-
 
 .myButton:focus{
     box-shadow: 0 0 rgba(255, 255, 255, 1) !important;
