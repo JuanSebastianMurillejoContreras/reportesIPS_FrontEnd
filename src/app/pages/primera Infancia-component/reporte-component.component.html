@@ -64,8 +64,8 @@
 
 <table mat-table [dataSource]="datos" class="mat-elevation-z8">
   <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna">
-    <th mat-header-cell *matHeaderCellDef class="sticky-header">{{ columna }}</th>
-    <td mat-cell *matCellDef="let fila">{{ fila[columna] }}</td>
+    <th mat-header-cell *matHeaderCellDef class="encabezado-tabla">{{ columna }}</th>
+    <td mat-cell *matCellDef="let fila" class="fila-tabla">{{ fila[columna] }}</td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="columnas"></tr>

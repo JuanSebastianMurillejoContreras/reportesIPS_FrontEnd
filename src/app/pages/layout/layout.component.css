@@ -8,13 +8,18 @@
     right: 0;
 }
 
-
 .example-sidenav-container {
     flex: 1;
 }
 
 .mat-toolbar {
+    background: #1e8449;
     background: linear-gradient(to right, #305e23, #a4e272); /* Degradado verde hacia la izquierda */
+    background: linear-gradient(to right, #145a32, #f1c40f); 
+    background: linear-gradient(to right, #145a32, #e5e7e9); 
+    background: linear-gradient(to right, #145a32, #27ae60); 
+  
+
     color: white;
   }
 
