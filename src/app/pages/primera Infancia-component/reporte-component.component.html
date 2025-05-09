@@ -19,9 +19,9 @@
   </div>
   <form [formGroup]="form" (submit)="search()">
     <mat-tab-group class="filter-tab-group" #tabGroup>
-      <mat-tab label="Buscar por Fechas">
+      <mat-tab label="Buscar">
         <div class="form-container">
-  
+
           <table class="filter-table">
             <tr>
               <td colspan="">
@@ -53,38 +53,37 @@
                   <mat-label>Nombre paciente</mat-label>
                   <input matInput>
                 </mat-form-field>
-              </td>
-              <td>
-                <mat-form-field appearance="outline">
-                  <mat-label>Médico</mat-label>
-                  <input matInput>
-                </mat-form-field>
-              </td>
+              </td>        
             </tr>
+            <td>
+              <mat-form-field appearance="outline">
+                <mat-label>CUP</mat-label>
+                <input matInput>
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field appearance="outline">
+                <mat-label>Médico</mat-label>
+                <input matInput>
+              </mat-form-field>
+            </td>
             <tr>
-              
-              
-             
-            </tr>
-            <tr>
-              <td colspan="2">
-                <mat-form-field appearance="outline">
-                  <mat-label>CUP</mat-label>
-                  <input matInput>
-                </mat-form-field>
-              </td>
-              <td colspan="2" style="text-align: right;">
+              <td style="text-align: right;">
                 <button mat-raised-button color="primary" type="submit">Buscar</button>
               </td>
             </tr>
           </table>
-  
+
         </div>
+      </mat-tab>
+
+      <mat-tab label="Busqueda avanzada">
+
       </mat-tab>
     </mat-tab-group>
   </form>
-  
-  
+
+
   <!-- Tabla de datos -->
   <div class="tabla-container">
     <table mat-table [dataSource]="datos" class="mat-table" multiTemplateDataRows>
@@ -100,13 +99,10 @@
     </table>
   </div>
 
-  <!-- Mensajes de estado -->
-  <p *ngIf="!cargado">Cargando datos...</p>
-  <p *ngIf="cargado && !datos.length">No hay datos disponibles.</p>
+
 
   <!-- Paginador -->
   <mat-paginator class="paginador-flotante" *ngIf="!isFiltering" [pageSizeOptions]="[5, 10, 25, 100, 1000]"
-    [pageSize]="pageSize" [length]="totalItems" (page)="cambiarPagina($event)"
-    aria-label="Paginador de citas">
+    [pageSize]="pageSize" [length]="totalItems" (page)="cambiarPagina($event)" aria-label="Paginador de citas">
   </mat-paginator>
 </div>
