@@ -2,86 +2,111 @@
 
   <div class="titulos">
     <div class="logo">
-        <img src="the_wala_ips_logo.jpg" width="80">   
+      <img src="the_wala_ips_logo.jpg" width="80">
     </div>
     <div class="textos">
-        <h1>Reporte citas</h1> 
-        <span>Aquí encontrarás el reporte de todas las citas de la IPSI</span>
-        <p>Puedes buscar por los parámetros que consideres necesarios para buscar por cita, por paciente o por profesional.</p>
+      <h1>Reporte citas</h1>
+      <span>Aquí encontrarás el reporte de todas las citas de la IPSI</span>
+      <p>Puedes buscar por los parámetros que consideres necesarios para buscar por cita, por paciente o por
+        profesional.</p>
     </div>
     <div style="display: flex; justify-content: flex-end;">
       <a href="#" (click)="descargarArchivoExcel($event)" title="Descargar Excel">
-        <img width="48" height="48"
-             src="https://img.icons8.com/material/48/40C057/ms-excel--v1.png"
-             alt="ms-excel--v1" />
+        <img width="48" height="48" src="https://img.icons8.com/material/48/40C057/ms-excel--v1.png"
+          alt="ms-excel--v1" />
       </a>
     </div>
-</div>
+  </div>
+  <form [formGroup]="form" (submit)="search()">
+    <mat-tab-group class="filter-tab-group" #tabGroup>
+      <mat-tab label="Buscar por Fechas">
+        <div class="form-container">
+  
+          <table class="filter-table">
+            <tr>
+              <td colspan="">
+                <mat-form-field appearance="outline">
+                  <mat-label>Selecciona un rango de fechas</mat-label>
+                  <mat-date-range-input [rangePicker]="picker">
+                    <input matStartDate placeholder="Inicio" formControlName="startDate">
+                    <input matEndDate placeholder="Fin" formControlName="endDate">
+                  </mat-date-range-input>
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-date-range-picker #picker></mat-date-range-picker>
+                  <mat-hint>DD/MM/YYYY - DD/MM/YYYY</mat-hint>
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field appearance="outline">
+                  <mat-label>Id cita</mat-label>
+                  <input matInput>
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field appearance="outline">
+                  <mat-label>Número de identificación</mat-label>
+                  <input matInput>
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field appearance="outline">
+                  <mat-label>Nombre paciente</mat-label>
+                  <input matInput>
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field appearance="outline">
+                  <mat-label>Médico</mat-label>
+                  <input matInput>
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              
+              
+             
+            </tr>
+            <tr>
+              <td colspan="2">
+                <mat-form-field appearance="outline">
+                  <mat-label>CUP</mat-label>
+                  <input matInput>
+                </mat-form-field>
+              </td>
+              <td colspan="2" style="text-align: right;">
+                <button mat-raised-button color="primary" type="submit">Buscar</button>
+              </td>
+            </tr>
+          </table>
+  
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </form>
+  
+  
+  <!-- Tabla de datos -->
+  <div class="tabla-container">
+    <table mat-table [dataSource]="datos" class="mat-table" multiTemplateDataRows>
 
-    <table class="filter-table">
-      <tr>
-        <td>
-          <mat-form-field class="example-full-width">
-            <mat-label>Id cita</mat-label>
-            <input matInput>
-          </mat-form-field>
-        </td>
-        <td>
-          <mat-form-field class="example-full-width">
-            <mat-label>Ingrese la fecha</mat-label>
-            <input matInput [matDatepicker]="picker">
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
-        </td>
-        <td>
-          <mat-form-field class="example-full-width">
-            <mat-label>Numero identificación</mat-label>
-            <input matInput>
-          </mat-form-field>
-        </td>
-        <td>
-          <mat-form-field class="example-full-width">
-            <mat-label>Nombre paciente</mat-label>
-            <input matInput>
-          </mat-form-field>
-        </td>
-        <td>
-          <mat-form-field class="example-full-width">
-            <mat-label>Medico</mat-label>
-            <input matInput>
-          </mat-form-field>
-        </td>
-        <td>
-          <mat-form-field class="example-full-width">
-            <mat-label>CUP</mat-label>
-            <input matInput>
-          </mat-form-field>
-        </td>
-      </tr>
+      <!-- Columnas dinámicas -->
+      <ng-container *ngFor="let col of columnas" [matColumnDef]="col">
+        <th mat-header-cell *matHeaderCellDef class="encabezado-tabla">{{ col }}</th>
+        <td mat-cell *matCellDef="let row" class="fila-tabla">{{ row[col] }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
     </table>
-    
+  </div>
 
-<table mat-table [dataSource]="datos" class="mat-elevation-z8">
-  <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna">
-    <th mat-header-cell *matHeaderCellDef class="encabezado-tabla">{{ columna }}</th>
-    <td mat-cell *matCellDef="let fila" class="fila-tabla">{{ fila[columna] }}</td>
-  </ng-container>
+  <!-- Mensajes de estado -->
+  <p *ngIf="!cargado">Cargando datos...</p>
+  <p *ngIf="cargado && !datos.length">No hay datos disponibles.</p>
 
-  <tr mat-header-row *matHeaderRowDef="columnas"></tr>
-  <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
-</table>
-
-<p *ngIf="!cargado">Cargando datos...</p>
-<p *ngIf="cargado && !datos.length">No hay datos disponibles.</p>
-
-
-<mat-paginator 
-  class="paginador-flotante"
-  *ngIf="!isFiltering" 
-  [pageSizeOptions]="[5, 10, 25, 100, 1000]" 
-  [pageSize]="pageSize" 
-  [length]="totalItems" 
-  (page)="cambiarPagina($event)" 
-  aria-label="Paginador de citas">
-</mat-paginator>
+  <!-- Paginador -->
+  <mat-paginator class="paginador-flotante" *ngIf="!isFiltering" [pageSizeOptions]="[5, 10, 25, 100, 1000]"
+    [pageSize]="pageSize" [length]="totalItems" (page)="cambiarPagina($event)"
+    aria-label="Paginador de citas">
+  </mat-paginator>
+</div>

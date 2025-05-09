@@ -1,37 +1,32 @@
 /* =======================
    ESTILOS GENERALES
 ========================== */
+h1, span, p {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #2c3e50;
+  text-align: left;
+}
 
 h1 {
   font-size: 2rem;
   font-weight: 600;
-  color: #2c3e50;
-  text-align: left;
-  margin: 0px 0px 0px 20px;
+  margin: 0 0 0 20px;
 }
 
 span {
   font-size: 1.2rem;
   font-weight: 600;
-  color: #2c3e50;
-  text-align: left;
-  margin: 0px 0px 0px 20px;
+  margin: 0 0 0 20px;
 }
 
 p {
   font-size: 1rem;
-  color: #2c3e50;
-  text-align: left;
-  margin: 10px 0px 0px 20px;
+  margin: 10px 0 0 20px;
 }
 
-h1, span, p {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
 /* =======================
    ESTRUCTURA Y LAYOUT
 ========================== */
-
 .titulos {
   display: flex;
   align-items: flex-start;
@@ -46,82 +41,138 @@ h1, span, p {
 }
 
 .logo img {
-  margin: 10px 0px 0px 20px;
-}
-
-.filter-table {
-  width: 90%;
-  margin: 0 auto;
-  border-collapse: collapse;
-  display: table;
-  justify-content: center;
-  margin-top: 20px;
+  margin: 10px 0 0 20px;
 }
 
 /* =======================
    TABLA DE DATOS
 ========================== */
-
-.mat-table {
-  width: 100%;
-  max-height: calc(100vh - 2000px);
-  overflow-y: auto;
-  display: block;
-  margin: 10px 10px 10px 10px;
+.mat-table, .tabla-estilizada {
+  width: 90%;
+  margin: 30px auto;
+  border-collapse: collapse;
+  display: table;
+  table-layout: auto;
 }
 
 .encabezado-tabla {
-  font-size: 12.5px;
   position: sticky;
   top: 0;
+  z-index: 2;
+  font-size: 14px;
+  font-weight: bold;
   color: #2c3e50;
+  background-color: #e7e7e7 !important;
   text-transform: uppercase;
-  /*border-top: 0.125rem solid #2c3e50;
-  border-bottom: 0.125rem solid #2c3e50;*/
-}
-
-.fila-tabla {
-  font-size: 12px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #000000d5;
+  padding: 12px;
+  border-bottom: 2px solid #ddd;
   text-align: left;
-     /* No permitir saltos de línea */
-            /* Ocultar desbordamiento */
-    /* Mostrar "..." si el texto no cabe */
 }
 
 .mat-mdc-header-cell {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background-color: #e7e7e7;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #2c3e50;
   font-weight: bolder;
   text-align: left;
   vertical-align: middle;
+  padding: 12px;
+  border-bottom: 2px solid #ddd;
+}
+
+.fila-tabla {
+  font-size: 13px;
+  color: #000000d5;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: left;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.mat-row:hover {
+  background-color: #f9f9f9;
+  cursor: pointer;
 }
 
 /* =======================
    FORMULARIOS
 ========================== */
 
+.filter-table {
+  width: 100%;
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
 .filter-table td {
-  padding: 15px;
+  padding: 10px; /* Más compacto que 15px */
   vertical-align: top;
   text-align: left;
-  width: 15%;
+  width: 25%;
 }
 
 .mat-mdc-form-field {
-  font-size: 20px;
+  font-size: 16px; /* Antes: 20px */
   width: 100%;
 }
 
+/* Ajuste para el toggle del datepicker */
 .mat-datepicker-toggle {
-  margin-right: 10px;
+  margin-right: 6px;
+}
+
+/* Estilo general del contenedor de filtros */
+.filter-tab-group {
+  width: 95%; /* Más ancho en pantallas grandes */
+  margin: 10px auto;
+  padding: 16px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo de la tabla para campos del formulario */
+.form-container .filter-table td mat-form-field {
+  margin: 0;
+}
+
+/* Opcional: Botón alineado a la derecha */
+.form-container .boton-buscar {
+  text-align: right;
+}
+
+
+/* =======================
+   ELEMENTOS FIJOS
+========================== */
+.form-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+mat-form-field {
+  flex: 4;
+  min-width: 400px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
 }
 
 /* =======================
    RESPONSIVE DESIGN
 ========================== */
-
 @media (max-width: 768px) {
   .filter-table {
     width: 100%;
@@ -130,16 +181,9 @@ h1, span, p {
   .filter-table td {
     width: 50%;
   }
-}
 
-/* =======================
-   ELEMENTOS FIJOS
-========================== */
-
-.paginador-flotante {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background-color: #ffffff;
-  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+  .tabla-container {
+    width: 100%;
+    padding: 10px;
+  }
 }

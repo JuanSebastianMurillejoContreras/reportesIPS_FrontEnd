@@ -32,10 +32,14 @@ export class ReporteCitasService {
 
   // Obtener datos paginados
   obtenerPaginado(pageSize: number, pageNumber: number): Observable<any> {
-    const params = new HttpParams()
+    let params = new HttpParams()
       .set('pageSize', pageSize)
-      .set('pageNumber', pageNumber);
-
+      .set('pageNumber', pageNumber);  
     return this.http.get(`${this.baseUrl}/pages`, { params });
   }
+
+  searchDates(date1: string, date2: string, limit: number = 1000, offset: number = 0): Observable<any>{
+    return this.http.get(`${this.baseUrl}/fechas?fechaInicio=${date1}&fechaFin=${date2}&limit=${limit}&offset=${offset}`);
+  }
+    
 }

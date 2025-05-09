@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { CommonModule, DatePipe} from '@angular/common';
 import { ReporteCitasService } from '../../service/reporte-service.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,16 +9,21 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 
 
 @Component({
   selector: 'app-reporte-component',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatTableModule, MatPaginatorModule, MatDatepickerModule, MatNativeDateModule],
+  imports: [CommonModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatTableModule, MatPaginatorModule, MatDatepickerModule, MatNativeDateModule,
+    ReactiveFormsModule, MatTabsModule],
+  providers: [DatePipe],
   templateUrl: './reporte-component.component.html',
   styleUrls: ['./reporte-component.component.css']
 })
 export class ReportePrimeraInfanciaComponent implements OnInit {
+
   datos: any[] = [];
   columnas: string[] = [];
   pageSize: number = 10;
@@ -27,17 +32,87 @@ export class ReportePrimeraInfanciaComponent implements OnInit {
   cargado: boolean = false;
   descargando: boolean = false;
 
-
   datosOriginales: any[] = []; // Copia completa de los datos para el filtro
   isFiltering: boolean = false; // Indica si el usuario está filtrando
+  form: any;
 
-  constructor(
-    private reporteCitasService: ReporteCitasService,
-    private snackBar: MatSnackBar
-  ) { }
+  @ViewChild('tabGroup') tabGroup!: MatTabGroup;
+
+  private reporteCitasService = inject(ReporteCitasService);
+  private snackBar = inject(MatSnackBar);
+  private datePipe = inject(DatePipe);
+
+  constructor(){}
+  
 
   ngOnInit(): void {
     this.cargarCitas();
+    this.form = new FormGroup({
+      startDate: new FormControl(),
+      endDate: new FormControl()
+    });
+
+  }
+
+  search() {
+    if (this.tabGroup.selectedIndex === 0) {
+      const startDate: Date = this.form.value['startDate'];
+      const endDate: Date = this.form.value['endDate'];
+      console.log('Fechas seleccionadas:', startDate, endDate);
+  
+      if (!startDate || !endDate) {
+        this.snackBar.open('Por favor selecciona ambas fechas.', 'Cerrar', {
+          duration: 3000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top'
+        });
+        return;
+      }
+  
+      const date1 = this.datePipe.transform(startDate, "yyyy-MM-dd");
+      const date2 = this.datePipe.transform(endDate, "yyyy-MM-dd");
+  
+      if (date1 && date2) {
+        // Aquí puedes agregar el console.log para ver la URL
+        console.log(`URL que se enviará al backend: http://localhost:8080/api/reportes/citas/fechas?fechaInicio=${date1}&fechaFin=${date2}`);
+
+    
+        this.reporteCitasService.searchDates(date1, date2).subscribe({
+          next: (data) => {
+            console.log('Datos recibidos del backend:', data); // 👈 Aquí imprimes los datos
+            this.createTable(data);
+          },
+          error: (err) => {
+            console.error('Error al buscar por fechas:', err);
+            this.snackBar.open('Error al filtrar las fechas.', 'Cerrar', {
+              duration: 3000
+            });
+          }
+        });
+        
+      }
+    }
+  }
+  
+createTable(data: any) {
+    console.log('Respuesta del backend:', data);
+    console.log('Array de datos:', data?.data);
+    console.log('Es arreglo:', Array.isArray(data?.data));
+    console.log('Cantidad de registros:', data?.data?.length);
+    
+    const registros = Array.isArray(data) ? data : [];
+  
+    if (registros.length > 0) {
+      this.datos = [...registros];
+      this.columnas = Object.keys(this.datos[0]);
+      this.totalItems = this.datos.length;
+      this.cargado = true;
+    } else {
+      this.datos = [];
+      this.snackBar.open('No se encontraron resultados para esas fechas.', 'Cerrar', {
+        duration: 3000
+      });
+    }
   }
 
   cargarCitas(): void {
@@ -120,4 +195,7 @@ export class ReportePrimeraInfanciaComponent implements OnInit {
       }
     });
   }
+
+  
+
 }  
