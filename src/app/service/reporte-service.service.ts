@@ -16,12 +16,19 @@ export class ReporteCitasService {
     @Inject('API_URL') private apiUrl: string
   ) { }
 
-  // Descargar Excel
-  descargarExcel(): Observable<Blob> {
-    return this.http.get(`${this.baseUrl}/descargar`, {
-      responseType: 'blob',
-    });
-  }
+  
+// Descargar Excel con rango de fechas
+descargarExcel(fechaInicio: string, fechaFin: string): Observable<Blob> {
+  const params = new HttpParams()
+    .set('fechaInicio', fechaInicio)
+    .set('fechaFin', fechaFin);
+
+  return this.http.get(`${this.baseUrl}/excel`, {
+    params: params,
+    responseType: 'blob',
+  });
+}
+
 
   // Enviar reporte por correo
   enviarReporte(): Observable<string> {
@@ -40,7 +47,5 @@ searchDates(fechaInicio: string, fechaFin: string, pageSize: number, pageNumber:
 
   return this.http.get(`${this.baseUrl}/fechas`, { params });
 }
-
-
 
 }

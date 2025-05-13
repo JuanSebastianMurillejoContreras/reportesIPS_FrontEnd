@@ -35,7 +35,7 @@ import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 export class ReportePrimeraInfanciaComponent implements OnInit {
 
   pageNumber: number = 0;
-  pageSize: number = 10;
+  pageSize: number = 100;
   totalItems: number = 0;
 
   startDateSeleccionada!: string;
@@ -114,115 +114,132 @@ export class ReportePrimeraInfanciaComponent implements OnInit {
     }
   }
 
-cambiarPagina(event: PageEvent): void {
-  const nuevoOffset = event.pageIndex * event.pageSize;
+  cambiarPagina(event: PageEvent): void {
+    const nuevoOffset = event.pageIndex * event.pageSize;
 
-  // Validar si el offset excede el total de elementos
-  if (nuevoOffset >= this.totalItems) {
-    this.snackBar.open('Ya no hay más resultados.', 'Cerrar', {
-      duration: 3000
+    // Validar si el offset excede el total de elementos
+    if (nuevoOffset >= this.totalItems) {
+      this.snackBar.open('Ya no hay más resultados.', 'Cerrar', {
+        duration: 3000
+      });
+      return;
+    }
+
+    this.pageNumber = event.pageIndex;  // Actualiza el número de página
+    this.pageSize = event.pageSize;  // Actualiza el tamaño de la página
+
+    // Si ya se seleccionaron las fechas, se realiza la consulta
+    if (this.startDateSeleccionada && this.endDateSeleccionada) {
+      const limit = this.pageSize;
+      const offset = this.pageNumber * this.pageSize;
+
+      console.log(`Paginando con limit=${limit}, offset=${offset}`);
+
+      // Realizamos la consulta con los parámetros de paginación
+      this.reporteCitasService.searchDates(this.startDateSeleccionada, this.endDateSeleccionada, limit, offset).subscribe({
+        next: (data) => {
+          console.log('Datos recibidos:', data); // Aquí puedes ver la respuesta
+          this.createTable(data);
+        },
+        error: (err) => {
+          console.error('Error al cambiar de página:', err);
+          this.snackBar.open('Error al cargar la nueva página.', 'Cerrar', {
+            duration: 3000
+          });
+        }
+      });
+    }
+  }
+
+
+  createTable(data: any): void {
+    console.log('createTable recibe:', data);
+
+    // Asegúrate de que los datos sean un array válido
+    const registros = Array.isArray(data?.data) ? data.data : [];
+
+    if (registros.length === 0) {
+      this.datos = []; // Limpiar la tabla si no hay datos
+    } else {
+      this.datos = registros; // Solo los registros de la página actual
+    }
+
+    this.totalItems = data?.total || 0;
+    this.columnas = registros.length > 0 ? Object.keys(registros[0]) : [];
+
+    if (this.paginator) {
+      this.paginator.length = this.totalItems; // Total de registros
+      this.paginator.pageIndex = this.pageNumber; // Página actual
+    }
+
+    this.cargado = true;
+
+    if (registros.length === 0) {
+      this.snackBar.open('No hay registros para esta página.', 'Cerrar', {
+        duration: 3000
+      });
+    }
+  }
+
+
+descargarArchivoExcel(event: Event): void {
+  
+  event.preventDefault();
+  const inicio = Date.now();
+
+  // Obtener las fechas desde el formulario
+  const startDate: Date = this.form.value['startDate'];
+  const endDate: Date = this.form.value['endDate'];
+
+  if (!startDate || !endDate) {
+    this.snackBar.open('Debe seleccionar un rango de fechas válido.', 'Cerrar', {
+      duration: 4000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top'
     });
     return;
   }
 
-  this.pageNumber = event.pageIndex;  // Actualiza el número de página
-  this.pageSize = event.pageSize;  // Actualiza el tamaño de la página
+  // Formatear las fechas a yyyy-MM-dd
+  const fechaInicio = this.datePipe.transform(startDate, 'yyyy-MM-dd');
+  const fechaFin = this.datePipe.transform(endDate, 'yyyy-MM-dd');
 
-  // Si ya se seleccionaron las fechas, se realiza la consulta
-  if (this.startDateSeleccionada && this.endDateSeleccionada) {
-    const limit = this.pageSize;
-    const offset = this.pageNumber * this.pageSize;
+  const snackRef = this.snackBar.open('Descargando reporte...', 'Cerrar', {
+    horizontalPosition: 'right',
+    verticalPosition: 'top'
+  });
 
-    console.log(`Paginando con limit=${limit}, offset=${offset}`);
-    
-    // Realizamos la consulta con los parámetros de paginación
-    this.reporteCitasService.searchDates(this.startDateSeleccionada, this.endDateSeleccionada, limit, offset).subscribe({
-      next: (data) => {
-        console.log('Datos recibidos:', data); // Aquí puedes ver la respuesta
-        this.createTable(data);
-      },
-      error: (err) => {
-        console.error('Error al cambiar de página:', err);
-        this.snackBar.open('Error al cargar la nueva página.', 'Cerrar', {
-          duration: 3000
-        });
-      }
-    });
-  }
+  this.reporteCitasService.descargarExcel(fechaInicio!, fechaFin!).subscribe({
+    next: (blob) => {
+      const fin = Date.now();
+      const tiempo = (fin - inicio) / 1000;
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'reporte-citas.xlsx';
+      a.click();
+      URL.revokeObjectURL(url);
+
+      snackRef.dismiss();
+      this.snackBar.open(`Descarga completada en ${tiempo.toFixed(2)} segundos.`, 'Cerrar', {
+        duration: 5000,
+        horizontalPosition: 'right',
+        verticalPosition: 'top'
+      });
+    }, 
+    error: (err) => {
+      snackRef.dismiss();
+      this.snackBar.open('Error al descargar el reporte.', 'Cerrar', {
+        duration: 5000,
+        horizontalPosition: 'right',
+        verticalPosition: 'top'
+      });
+      console.error('Error al descargar el Excel:', err);
+    }
+  });
+  console.log('Fechas para exportar:', fechaInicio, fechaFin);
 }
 
 
-createTable(data: any): void {
-  console.log('createTable recibe:', data);
-
-  // Asegúrate de que los datos sean un array válido
-  const registros = Array.isArray(data?.data) ? data.data : [];
-
-  if (registros.length === 0) {
-    this.datos = []; // Limpiar la tabla si no hay datos
-  } else {
-    this.datos = registros; // Solo los registros de la página actual
-  }
-
-  this.totalItems = data?.total || 0;
-  this.columnas = registros.length > 0 ? Object.keys(registros[0]) : [];
-
-  if (this.paginator) {
-    this.paginator.length = this.totalItems; // Total de registros
-    this.paginator.pageIndex = this.pageNumber; // Página actual
-  }
-
-  this.cargado = true;
-
-  if (registros.length === 0) {
-    this.snackBar.open('No hay registros para esta página.', 'Cerrar', {
-      duration: 3000
-    });
-  }
-}
-
-
-
-
-
-  // Método para descargar el reporte en formato Excel
-  descargarArchivoExcel(event: Event): void {
-    event.preventDefault();
-    const inicio = Date.now();
-
-    const snackRef = this.snackBar.open('Descargando reporte...', 'Cerrar', {
-      horizontalPosition: 'right',
-      verticalPosition: 'top'
-    });
-
-    this.reporteCitasService.descargarExcel().subscribe({
-      next: (blob) => {
-        const fin = Date.now();
-        const tiempo = (fin - inicio) / 1000;
-
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'reporte-citas.xlsx';
-        a.click();
-        URL.revokeObjectURL(url);
-
-        snackRef.dismiss();
-        this.snackBar.open(`Descarga completada en ${tiempo.toFixed(2)} segundos.`, 'Cerrar', {
-          duration: 4000,
-          horizontalPosition: 'right',
-          verticalPosition: 'top'
-        });
-      },
-      error: (err) => {
-        snackRef.dismiss();
-        this.snackBar.open('Error al descargar el reporte.', 'Cerrar', {
-          duration: 4000,
-          horizontalPosition: 'right',
-          verticalPosition: 'top'
-        });
-        console.error('Error al descargar el Excel:', err);
-      }
-    });
-  }
 }

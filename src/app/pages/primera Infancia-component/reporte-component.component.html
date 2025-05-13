@@ -10,18 +10,20 @@
       <p>Puedes buscar por los parámetros que consideres necesarios para buscar por cita, por paciente o por
         profesional.</p>
     </div>
-    <div style="display: flex; justify-content: flex-end;">
-      <a href="#" (click)="descargarArchivoExcel($event)" title="Descargar Excel">
-        <img width="48" height="48" src="https://img.icons8.com/material/48/40C057/ms-excel--v1.png"
-          alt="ms-excel--v1" />
-      </a>
-    </div>
   </div>
+
+<div class="descargar-excel">
+  <a href="#" (click)="descargarArchivoExcel($event)" title="Descargar archivo Excel" aria-label="Descargar archivo Excel">
+    <img src="excel_icon.png" alt="Ícono de Excel" width="40" height="40" />
+  </a>
+</div>
+
+
   <form [formGroup]="form" (submit)="search()">
     <mat-tab-group class="filter-tab-group" #tabGroup>
-      <mat-tab label="Buscar">
+      <mat-tab label="Buscar por Fechas">
         <div class="form-container">
-
+  
           <table class="filter-table">
             <tr>
               <td colspan="">
@@ -54,62 +56,59 @@
                   <input matInput>
                 </mat-form-field>
               </td>
+              <td>
+                <mat-form-field appearance="outline">
+                  <mat-label>Médico</mat-label>
+                  <input matInput>
+                </mat-form-field>
+              </td>
             </tr>
-            <td>
-              <mat-form-field appearance="outline">
-                <mat-label>CUP</mat-label>
-                <input matInput>
-              </mat-form-field>
-            </td>
-            <td>
-              <mat-form-field appearance="outline">
-                <mat-label>Médico</mat-label>
-                <input matInput>
-              </mat-form-field>
-            </td>
             <tr>
-              <td style="text-align: right;">
-                <!-- Botón o evento para buscar -->
-                <button mat-raised-button color="primary" (click)="search(true)">Buscar</button>
-
+              
+              
+             
+            </tr>
+            <tr>
+              <td colspan="2">
+                <mat-form-field appearance="outline">
+                  <mat-label>CUP</mat-label>
+                  <input matInput>
+                </mat-form-field>
+              </td>
+              <td colspan="2" style="text-align: right;">
+                <button mat-raised-button color="primary" type="submit">Buscar</button>
               </td>
             </tr>
           </table>
-
+  
         </div>
-      </mat-tab>
-
-      <mat-tab label="Busqueda avanzada">
-
       </mat-tab>
     </mat-tab-group>
   </form>
-
-
+  
+  
   <!-- Tabla de datos -->
   <div class="tabla-container">
-    <mat-table mat-table [dataSource]="datos" class="mat-table" multiTemplateDataRows>
+    <table mat-table [dataSource]="datos" class="mat-table" multiTemplateDataRows>
+
       <!-- Columnas dinámicas -->
-      <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna">
-        <mat-header-cell *matHeaderCellDef>{{ columna }}</mat-header-cell>
-        <mat-cell *matCellDef="let row">{{ row[columna] }}</mat-cell>
+      <ng-container *ngFor="let col of columnas" [matColumnDef]="col">
+        <th mat-header-cell *matHeaderCellDef class="encabezado-tabla">{{ col }}</th>
+        <td mat-cell *matCellDef="let row" class="fila-tabla">{{ row[col] }}</td>
       </ng-container>
 
-      <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
-    </mat-table>
-
-    <!-- Mensaje si no hay registros -->
-    <div *ngIf="datos.length === 0" class="no-registros">
-      <p>No se encontraron resultados para esta búsqueda.</p>
-    </div>
+      <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+    </table>
   </div>
 
+  <!-- Mensajes de estado -->
+  <p *ngIf="!cargado">Cargando datos...</p>
+  <p *ngIf="cargado && !datos.length">No hay datos disponibles.</p>
+
   <!-- Paginador -->
-  <mat-paginator *ngIf="!isFiltering && totalItems > 0" class="paginador-flotante"
-    [pageSizeOptions]="[5, 10, 25, 100, 1000]" [pageSize]="pageSize" [pageIndex]="pageNumber" [length]="totalItems"
-    (page)="cambiarPagina($event)" aria-label="Paginador de citas">
+  <mat-paginator class="paginador-flotante" *ngIf="!isFiltering" [pageSizeOptions]="[5, 10, 25, 100, 1000]"
+    [pageSize]="pageSize" [length]="totalItems" (page)="cambiarPagina($event)"
+    aria-label="Paginador de citas">
   </mat-paginator>
-
-
 </div>

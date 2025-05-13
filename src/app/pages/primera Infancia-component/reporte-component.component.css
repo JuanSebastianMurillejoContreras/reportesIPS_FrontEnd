@@ -1,6 +1,7 @@
 /* =======================
    ESTILOS GENERALES
 ========================== */
+
 h1, span, p {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #2c3e50;
@@ -27,6 +28,8 @@ p {
 /* =======================
    ESTRUCTURA Y LAYOUT
 ========================== */
+
+
 .titulos {
   display: flex;
   align-items: flex-start;
@@ -47,12 +50,22 @@ p {
 /* =======================
    TABLA DE DATOS
 ========================== */
+
+.tabla-container {
+  width: 100%;
+  overflow-x: auto; /* ✅ Scroll horizontal */
+  padding: 10px;
+  box-sizing: border-box;
+}
+
 .mat-table, .tabla-estilizada {
+  min-width: 1000px; /* ✅ Fuerza el scroll si hay muchas columnas */
   width: 90%;
   margin: 30px auto;
   border-collapse: collapse;
   display: table;
   table-layout: auto;
+  box-sizing: border-box;
 }
 
 .encabezado-tabla {
@@ -100,22 +113,26 @@ p {
 /* =======================
    FORMULARIOS
 ========================== */
-
 .filter-table {
   width: 100%;
   margin: 0 auto;
   border-collapse: collapse;
+  table-layout: fixed;
+  box-sizing: border-box;
 }
 
 .filter-table td {
-  padding: 10px; /* Más compacto que 15px */
+  padding: 10px;
   vertical-align: top;
   text-align: left;
   width: 25%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .mat-mdc-form-field {
-  font-size: 16px; /* Antes: 20px */
+  font-size: 16px;
   width: 100%;
 }
 
@@ -126,7 +143,7 @@ p {
 
 /* Estilo general del contenedor de filtros */
 .filter-tab-group {
-  width: 95%; /* Más ancho en pantallas grandes */
+  width: 95%;
   margin: 10px auto;
   padding: 16px;
   background-color: #ffffff;
@@ -144,9 +161,25 @@ p {
   text-align: right;
 }
 
+/* =======================
+   DESCARGAR EXCEL
+========================== */
 
+.descargar-excel {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 80px;
+}
 
+.descargar-excel img {
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
 
+.descargar-excel img:hover {
+  transform: scale(1.5);
+}
 
 /* =======================
    ELEMENTOS FIJOS
@@ -154,6 +187,9 @@ p {
 .form-container {
   display: flex;
   flex-direction: column;
+  /* Quitar overflow-x hidden para evitar conflictos */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-row {
@@ -162,12 +198,32 @@ p {
   gap: 20px;
 }
 
-
+mat-form-field {
+  flex: 1 1 250px;
+  min-width: 200px;
+  max-width: 100%;
+}
 
 .form-actions {
   display: flex;
   justify-content: flex-end;
   margin-top: 20px;
+}
+
+/* =======================
+   PAGINADOR FLOTANTE
+========================== */
+.paginador-flotante {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+  background-color: transparent;
+  backdrop-filter: blur(4px); /* opcional: efecto de difuminado */
+  padding: 8px 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 -1px 6px rgba(0, 0, 0, 0.05); /* sombra suave arriba */
 }
 
 /* =======================
@@ -182,40 +238,9 @@ p {
     width: 50%;
   }
 
-  .tabla-container {
-    width: 100%;
-    padding: 10px;
-  }
-}
-/* =======================
-   MAT -TAB
-========================== */
-.custom-tab-group {
-  background-color: #f7fafc;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+ .tabla-container {
+  margin-bottom: 95px; /* Deja espacio suficiente para el paginador fijo */
+  overflow-x: auto;
 }
 
-.custom-tab-group .mat-tab-label {
-  font-size: 15px;
-  font-weight: 600;
-  color: #2d3748;
-  padding: 12px 24px;
-  border-radius: 10px;
-  margin: 4px;
-  transition: all 0.3s ease;
-}
-
-.custom-tab-group .mat-tab-label:hover {
-  background-color: #e2e8f0;
-}
-
-.custom-tab-group .mat-tab-label.mat-tab-label-active {
-  background-color: #3182ce;
-  color: #ffffff;
-  box-shadow: 0 4px 8px rgba(49, 130, 206, 0.4);
-}
-
-.custom-tab-group .mat-ink-bar {
-  display: block; 
 }
