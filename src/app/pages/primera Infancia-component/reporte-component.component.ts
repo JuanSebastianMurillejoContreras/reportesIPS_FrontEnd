@@ -35,7 +35,7 @@ import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 export class ReportePrimeraInfanciaComponent implements OnInit {
 
   pageNumber: number = 0;
-  pageSize: number = 100;
+  pageSize: number = 10;
   totalItems: number = 0;
 
   startDateSeleccionada!: string;
@@ -59,97 +59,152 @@ export class ReportePrimeraInfanciaComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = new FormGroup({
-      startDate: new FormControl(),
-      endDate: new FormControl()
-    });
+    startDate: new FormControl(),
+    endDate: new FormControl(),
+    idCita: new FormControl(),
+    identificacion: new FormControl(),
+    nombrePaciente: new FormControl(),
+    nombreMedico: new FormControl(),
+    cup: new FormControl()
+  });
   }
 
   // Método de búsqueda para filtrar por fechas
 
+  onSubmit(): void {
+    this.search(true); // siempre reinicia la paginación al buscar
+  }
+
+  limpiarFormulario(): void {
+  this.form.reset();
+
+  this.pageNumber = 0;
+  this.totalItems = 0;
+  this.datos = [];
+  this.columnas = [];
+  this.cargado = false;
+  this.startDateSeleccionada = '';
+  this.endDateSeleccionada = '';
+
+  if (this.paginator) {
+    this.paginator.pageIndex = 0;
+    this.paginator.length = 0;
+  }
+
+  this.snackBar.open('Formulario y resultados limpiados.', 'Cerrar', {
+    duration: 3000,
+    horizontalPosition: 'right',
+    verticalPosition: 'top'
+  });
+}
+
+
 
   search(reiniciarPagina: boolean = false): void {
-    if (this.isLoading) return;
-    this.isLoading = true;
+  if (this.isLoading) return;
+  this.isLoading = true;
 
-    const startDate: Date = this.form.value['startDate'];
-    const endDate: Date = this.form.value['endDate'];
+  const {
+    startDate,
+    endDate,
+    idCita,
+    identificacion,
+    nombrePaciente,
+    medico,
+    cup
+  } = this.form.value;
 
-    if (!startDate || !endDate) {
-      this.snackBar.open('Por favor selecciona ambas fechas.', 'Cerrar', {
-        duration: 3000,
-        horizontalPosition: 'right',
-        verticalPosition: 'top'
-      });
-      return;
-    }
+  if (!startDate || !endDate) {
+    this.snackBar.open('Por favor selecciona ambas fechas.', 'Cerrar', {
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top'
+    });
+    this.isLoading = false;
+    return;
+  }
 
-    const date1 = this.datePipe.transform(startDate, "yyyy-MM-dd");
-    const date2 = this.datePipe.transform(endDate, "yyyy-MM-dd");
+  const fechaInicio = this.datePipe.transform(startDate, "yyyy-MM-dd")!;
+  const fechaFin = this.datePipe.transform(endDate, "yyyy-MM-dd")!;
 
-    if (date1 && date2) {
-      // Guardamos las fechas seleccionadas
-      this.startDateSeleccionada = date1;
-      this.endDateSeleccionada = date2;
+  this.startDateSeleccionada = fechaInicio;
+  this.endDateSeleccionada = fechaFin;
 
-      if (reiniciarPagina) {
-        this.pageNumber = 0; // Reinicia la página si es una nueva búsqueda
-      }
-
-      const limit = this.pageSize;
-      const offset = this.pageNumber * this.pageSize;
-
-      this.reporteCitasService.searchDates(date1, date2, limit, offset).subscribe({
-        next: (data) => {
-          this.createTable(data);
-          this.isLoading = false;
-        },
-        error: (err) => {
-          console.error('Error al buscar por fechas:', err);
-          this.snackBar.open('Error al filtrar las fechas.', 'Cerrar', {
-            duration: 3000
-          });
-          this.isLoading = false;
-        }
-      });
+  if (reiniciarPagina) {
+    this.pageNumber = 0;
+    if (this.paginator) {
+      this.paginator.pageIndex = 0;
     }
   }
 
-  cambiarPagina(event: PageEvent): void {
-    const nuevoOffset = event.pageIndex * event.pageSize;
+  const limit = this.pageSize;
+  const offset = this.pageNumber * this.pageSize;
 
-    // Validar si el offset excede el total de elementos
-    if (nuevoOffset >= this.totalItems) {
-      this.snackBar.open('Ya no hay más resultados.', 'Cerrar', {
-        duration: 3000
-      });
-      return;
+  this.reporteCitasService.searchDates(
+    fechaInicio,
+    fechaFin,
+    limit,
+    offset,
+    idCita,
+    identificacion,
+    nombrePaciente,
+    medico,
+    cup
+  ).subscribe({
+    next: (data) => {
+      this.createTable(data);
+      this.isLoading = false;
+    },
+    error: (err) => {
+      console.error('Error en búsqueda:', err);
+      this.snackBar.open('Error al filtrar.', 'Cerrar', { duration: 3000 });
+      this.isLoading = false;
     }
+  });
+}
 
-    this.pageNumber = event.pageIndex;  // Actualiza el número de página
-    this.pageSize = event.pageSize;  // Actualiza el tamaño de la página
+ cambiarPagina(event: PageEvent): void {
+  const nuevoOffset = event.pageIndex * event.pageSize;
 
-    // Si ya se seleccionaron las fechas, se realiza la consulta
-    if (this.startDateSeleccionada && this.endDateSeleccionada) {
-      const limit = this.pageSize;
-      const offset = this.pageNumber * this.pageSize;
-
-      console.log(`Paginando con limit=${limit}, offset=${offset}`);
-
-      // Realizamos la consulta con los parámetros de paginación
-      this.reporteCitasService.searchDates(this.startDateSeleccionada, this.endDateSeleccionada, limit, offset).subscribe({
-        next: (data) => {
-          console.log('Datos recibidos:', data); // Aquí puedes ver la respuesta
-          this.createTable(data);
-        },
-        error: (err) => {
-          console.error('Error al cambiar de página:', err);
-          this.snackBar.open('Error al cargar la nueva página.', 'Cerrar', {
-            duration: 3000
-          });
-        }
-      });
-    }
+  if (nuevoOffset >= this.totalItems) {
+    this.snackBar.open('Ya no hay más resultados.', 'Cerrar', { duration: 3000 });
+    return;
   }
+
+  this.pageNumber = event.pageIndex;
+  this.pageSize = event.pageSize;
+
+  const {
+    idCita,
+    identificacion,
+    nombrePaciente,
+    medico,
+    cup
+  } = this.form.value;
+
+  const fechaInicio = this.startDateSeleccionada;
+  const fechaFin = this.endDateSeleccionada;
+
+  this.reporteCitasService.searchDates(
+    fechaInicio,
+    fechaFin,
+    this.pageSize,
+    this.pageNumber * this.pageSize,
+    idCita,
+    identificacion,
+    nombrePaciente,
+    medico,
+    cup
+  ).subscribe({
+    next: (data) => {
+      this.createTable(data);
+    },
+    error: (err) => {
+      console.error('Error al cambiar de página:', err);
+      this.snackBar.open('Error al cargar la nueva página.', 'Cerrar', { duration: 3000 });
+    }
+  });
+}
 
 
   createTable(data: any): void {
@@ -182,64 +237,64 @@ export class ReportePrimeraInfanciaComponent implements OnInit {
   }
 
 
-descargarArchivoExcel(event: Event): void {
-  
-  event.preventDefault();
-  const inicio = Date.now();
+  descargarArchivoExcel(event: Event): void {
 
-  // Obtener las fechas desde el formulario
-  const startDate: Date = this.form.value['startDate'];
-  const endDate: Date = this.form.value['endDate'];
+    event.preventDefault();
+    const inicio = Date.now();
 
-  if (!startDate || !endDate) {
-    this.snackBar.open('Debe seleccionar un rango de fechas válido.', 'Cerrar', {
-      duration: 4000,
+    // Obtener las fechas desde el formulario
+    const startDate: Date = this.form.value['startDate'];
+    const endDate: Date = this.form.value['endDate'];
+
+    if (!startDate || !endDate) {
+      this.snackBar.open('Debe seleccionar un rango de fechas válido.', 'Cerrar', {
+        duration: 4000,
+        horizontalPosition: 'right',
+        verticalPosition: 'top'
+      });
+      return;
+    }
+
+    // Formatear las fechas a yyyy-MM-dd
+    const fechaInicio = this.datePipe.transform(startDate, 'yyyy-MM-dd');
+    const fechaFin = this.datePipe.transform(endDate, 'yyyy-MM-dd');
+
+    const snackRef = this.snackBar.open('Descargando reporte...', 'Cerrar', {
       horizontalPosition: 'right',
       verticalPosition: 'top'
     });
-    return;
+
+    this.reporteCitasService.descargarExcel(fechaInicio!, fechaFin!).subscribe({
+      next: (blob) => {
+        const fin = Date.now();
+        const tiempo = (fin - inicio) / 1000;
+
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'reporte-citas.xlsx';
+        a.click();
+        URL.revokeObjectURL(url);
+
+        snackRef.dismiss();
+        this.snackBar.open(`Descarga completada en ${tiempo.toFixed(2)} segundos.`, 'Cerrar', {
+          duration: 5000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top'
+        });
+      },
+      error: (err) => {
+        snackRef.dismiss();
+        this.snackBar.open('Error al descargar el reporte.', 'Cerrar', {
+          duration: 5000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top'
+        });
+        console.error('Error al descargar el Excel:', err);
+      }
+    });
+    console.log('Fechas para exportar:', fechaInicio, fechaFin);
   }
-
-  // Formatear las fechas a yyyy-MM-dd
-  const fechaInicio = this.datePipe.transform(startDate, 'yyyy-MM-dd');
-  const fechaFin = this.datePipe.transform(endDate, 'yyyy-MM-dd');
-
-  const snackRef = this.snackBar.open('Descargando reporte...', 'Cerrar', {
-    horizontalPosition: 'right',
-    verticalPosition: 'top'
-  });
-
-  this.reporteCitasService.descargarExcel(fechaInicio!, fechaFin!).subscribe({
-    next: (blob) => {
-      const fin = Date.now();
-      const tiempo = (fin - inicio) / 1000;
-
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'reporte-citas.xlsx';
-      a.click();
-      URL.revokeObjectURL(url);
-
-      snackRef.dismiss();
-      this.snackBar.open(`Descarga completada en ${tiempo.toFixed(2)} segundos.`, 'Cerrar', {
-        duration: 5000,
-        horizontalPosition: 'right',
-        verticalPosition: 'top'
-      });
-    }, 
-    error: (err) => {
-      snackRef.dismiss();
-      this.snackBar.open('Error al descargar el reporte.', 'Cerrar', {
-        duration: 5000,
-        horizontalPosition: 'right',
-        verticalPosition: 'top'
-      });
-      console.error('Error al descargar el Excel:', err);
-    }
-  });
-  console.log('Fechas para exportar:', fechaInicio, fechaFin);
-}
 
 
 }

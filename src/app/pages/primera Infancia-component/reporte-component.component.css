@@ -2,6 +2,11 @@
    ESTILOS GENERALES
 ========================== */
 
+/*.contenido {
+  background-color: #ffffff;
+}*/
+
+
 h1, span, p {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #2c3e50;
@@ -9,7 +14,7 @@ h1, span, p {
 }
 
 h1 {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 600;
   margin: 0 0 0 20px;
 }
@@ -22,7 +27,8 @@ span {
 
 p {
   font-size: 1rem;
-  margin: 10px 0 0 20px;
+  font-weight: 400;
+  margin: 0 0 0 20px;
 }
 
 /* =======================
@@ -33,8 +39,8 @@ p {
 .titulos {
   display: flex;
   align-items: flex-start;
-  margin: 20px;
-  gap: 20px;
+  margin: 30px;
+  gap: 15px;
 }
 
 .textos {
@@ -43,9 +49,7 @@ p {
   align-items: flex-start;
 }
 
-.logo img {
-  margin: 10px 0 0 20px;
-}
+
 
 /* =======================
    TABLA DE DATOS
@@ -53,32 +57,34 @@ p {
 
 .tabla-container {
   width: 100%;
-  overflow-x: auto; /* ✅ Scroll horizontal */
-  padding: 10px;
-  box-sizing: border-box;
+  /*overflow-x: auto; /* ✅ Scroll horizontal */
+  padding: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  box-sizing: content-box;
 }
 
 .mat-table, .tabla-estilizada {
-  min-width: 1000px; /* ✅ Fuerza el scroll si hay muchas columnas */
-  width: 90%;
+  width: 100%;
   margin: 30px auto;
   border-collapse: collapse;
   display: table;
   table-layout: auto;
-  box-sizing: border-box;
 }
 
 .encabezado-tabla {
   position: sticky;
   top: 0;
-  z-index: 2;
-  font-size: 14px;
+  z-index: 10;
+  font-size: 16px;
   font-weight: bold;
   color: #2c3e50;
-  background-color: #e7e7e7 !important;
+  background-color: #e5e8e8 !important;
   text-transform: uppercase;
-  padding: 12px;
-  border-bottom: 2px solid #ddd;
+  padding: 10px;
+  border-bottom: 0px solid #ddd;
   text-align: left;
 }
 
@@ -102,7 +108,7 @@ p {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   text-align: left;
   padding: 10px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #e5e7e9;
 }
 
 .mat-row:hover {
@@ -113,54 +119,63 @@ p {
 /* =======================
    FORMULARIOS
 ========================== */
-.filter-table {
+.filter-tab-group {
+  width: 95%;
+  margin: 10px auto;
+  padding: 15px 20px;
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-container {
   width: 100%;
-  margin: 0 auto;
-  border-collapse: collapse;
-  table-layout: fixed;
   box-sizing: border-box;
 }
 
+/* ✅ NUEVO ESTILO PARA MOSTRAR EL FORMULARIO EN UNA SOLA LÍNEA */
+.filter-table {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
+  padding: 10px 0;
+}
+
 .filter-table td {
-  padding: 10px;
-  vertical-align: top;
-  text-align: left;
-  width: 25%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  flex: 1 1 18%;
+  min-width: 180px;
+  padding: 0;
+}
+
+.filter-table td[colspan="2"] {
+  flex: 1 1 36%;
+}
+
+mat-form-field {
+  width: 98%;
+  margin: 0;
 }
 
 .mat-mdc-form-field {
-  font-size: 16px;
-  width: 100%;
+  font-size: 15px;
 }
 
 /* Ajuste para el toggle del datepicker */
 .mat-datepicker-toggle {
-  margin-right: 6px;
+  margin-right: 8px;
 }
 
-/* Estilo general del contenedor de filtros */
-.filter-tab-group {
-  width: 95%;
-  margin: 10px auto;
-  padding: 16px;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+/* =======================
+   BOTÓN BUSCAR / LIMPIAR
+========================== */
+.boton-buscar-limpiar {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 20px 0;
+  flex-wrap: wrap;
 }
-
-/* Estilo de la tabla para campos del formulario */
-.form-container .filter-table td mat-form-field {
-  margin: 0;
-}
-
-/* Opcional: Botón alineado a la derecha */
-.form-container .boton-buscar {
-  text-align: right;
-}
-
 /* =======================
    DESCARGAR EXCEL
 ========================== */

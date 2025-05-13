@@ -38,14 +38,31 @@ descargarExcel(fechaInicio: string, fechaFin: string): Observable<Blob> {
   }
 
   
-searchDates(fechaInicio: string, fechaFin: string, pageSize: number, pageNumber: number): Observable<any> {
+searchDates(
+  fechaInicio: string,
+  fechaFin: string,
+  pageSize: number,
+  offset: number,
+  idCita?: string,
+  identificacion?: string,
+  nombrePaciente?: string,
+  medico?: string,
+  cup?: string
+): Observable<any> {
   let params = new HttpParams()
     .set('fechaInicio', fechaInicio)
     .set('fechaFin', fechaFin)
-    .set('limit', pageSize.toString()) // Se asegura que limit es un string
-    .set('offset', (pageNumber * pageSize).toString()); // Offset calculado correctamente
+    .set('limit', pageSize.toString())
+    .set('offset', offset.toString());
+
+  if (idCita) params = params.set('idCita', idCita);
+  if (identificacion) params = params.set('identificacion', identificacion);
+  if (nombrePaciente) params = params.set('nombrePaciente', nombrePaciente);
+  if (medico) params = params.set('medico', medico);
+  if (cup) params = params.set('cup', cup);
 
   return this.http.get(`${this.baseUrl}/fechas`, { params });
 }
+
 
 }
