@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
-import { CommonModule, DatePipe} from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ReporteCitasService } from '../../service/reporte-service.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,7 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
@@ -16,167 +16,197 @@ import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 @Component({
   selector: 'app-reporte-component',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatTableModule, MatPaginatorModule, MatDatepickerModule, MatNativeDateModule,
-    ReactiveFormsModule, MatTabsModule],
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    ReactiveFormsModule,
+    MatTabsModule
+  ],
   providers: [DatePipe],
   templateUrl: './reporte-component.component.html',
   styleUrls: ['./reporte-component.component.css']
 })
 export class ReportePrimeraInfanciaComponent implements OnInit {
 
+  pageNumber: number = 0;
+  pageSize: number = 10;
+  totalItems: number = 0;
+
+  startDateSeleccionada!: string;
+  endDateSeleccionada!: string;
+
   datos: any[] = [];
   columnas: string[] = [];
-  pageSize: number = 10;
-  pageNumber: number = 0;
-  totalItems: number = 0;
   cargado: boolean = false;
-  descargando: boolean = false;
 
-  datosOriginales: any[] = []; // Copia completa de los datos para el filtro
-  isFiltering: boolean = false; // Indica si el usuario está filtrando
-  form: any;
+  isFiltering: boolean = false;
+  form!: FormGroup;
+
+  isLoading = false;
 
   @ViewChild('tabGroup') tabGroup!: MatTabGroup;
+  @ViewChild('paginator') paginator: any; // <-- Aseguramos que el paginator esté referenciado.
 
   private reporteCitasService = inject(ReporteCitasService);
   private snackBar = inject(MatSnackBar);
   private datePipe = inject(DatePipe);
 
-  constructor(){}
-  
-
   ngOnInit(): void {
-    this.cargarCitas();
     this.form = new FormGroup({
       startDate: new FormControl(),
       endDate: new FormControl()
     });
-
   }
 
-  search() {
-    if (this.tabGroup.selectedIndex === 0) {
-      const startDate: Date = this.form.value['startDate'];
-      const endDate: Date = this.form.value['endDate'];
-      console.log('Fechas seleccionadas:', startDate, endDate);
-  
-      if (!startDate || !endDate) {
-        this.snackBar.open('Por favor selecciona ambas fechas.', 'Cerrar', {
-          duration: 3000,
-          horizontalPosition: 'right',
-          verticalPosition: 'top'
-        });
-        return;
-      }
-  
-      const date1 = this.datePipe.transform(startDate, "yyyy-MM-dd");
-      const date2 = this.datePipe.transform(endDate, "yyyy-MM-dd");
-  
-      if (date1 && date2) {
-        // Aquí puedes agregar el console.log para ver la URL
-        console.log(`URL que se enviará al backend: http://localhost:8080/api/reportes/citas/fechas?fechaInicio=${date1}&fechaFin=${date2}`);
+  // Método de búsqueda para filtrar por fechas
 
-    
-        this.reporteCitasService.searchDates(date1, date2).subscribe({
-          next: (data) => {
-            console.log('Datos recibidos del backend:', data); // 👈 Aquí imprimes los datos
-            this.createTable(data);
-          },
-          error: (err) => {
-            console.error('Error al buscar por fechas:', err);
-            this.snackBar.open('Error al filtrar las fechas.', 'Cerrar', {
-              duration: 3000
-            });
-          }
-        });
-        
-      }
+
+  search(reiniciarPagina: boolean = false): void {
+    if (this.isLoading) return;
+    this.isLoading = true;
+
+    const startDate: Date = this.form.value['startDate'];
+    const endDate: Date = this.form.value['endDate'];
+
+    if (!startDate || !endDate) {
+      this.snackBar.open('Por favor selecciona ambas fechas.', 'Cerrar', {
+        duration: 3000,
+        horizontalPosition: 'right',
+        verticalPosition: 'top'
+      });
+      return;
     }
-  }
-  
-createTable(data: any) {
-    console.log('Respuesta del backend:', data);
-    console.log('Array de datos:', data?.data);
-    console.log('Es arreglo:', Array.isArray(data?.data));
-    console.log('Cantidad de registros:', data?.data?.length);
-    
-    const registros = Array.isArray(data) ? data : [];
-  
-    if (registros.length > 0) {
-      this.datos = [...registros];
-      this.columnas = Object.keys(this.datos[0]);
-      this.totalItems = this.datos.length;
-      this.cargado = true;
-    } else {
-      this.datos = [];
-      this.snackBar.open('No se encontraron resultados para esas fechas.', 'Cerrar', {
-        duration: 3000
+
+    const date1 = this.datePipe.transform(startDate, "yyyy-MM-dd");
+    const date2 = this.datePipe.transform(endDate, "yyyy-MM-dd");
+
+    if (date1 && date2) {
+      // Guardamos las fechas seleccionadas
+      this.startDateSeleccionada = date1;
+      this.endDateSeleccionada = date2;
+
+      if (reiniciarPagina) {
+        this.pageNumber = 0; // Reinicia la página si es una nueva búsqueda
+      }
+
+      const limit = this.pageSize;
+      const offset = this.pageNumber * this.pageSize;
+
+      this.reporteCitasService.searchDates(date1, date2, limit, offset).subscribe({
+        next: (data) => {
+          this.createTable(data);
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Error al buscar por fechas:', err);
+          this.snackBar.open('Error al filtrar las fechas.', 'Cerrar', {
+            duration: 3000
+          });
+          this.isLoading = false;
+        }
       });
     }
   }
 
-  cargarCitas(): void {
-    this.reporteCitasService.obtenerPaginado(this.pageSize, this.pageNumber).subscribe({
+cambiarPagina(event: PageEvent): void {
+  const nuevoOffset = event.pageIndex * event.pageSize;
+
+  // Validar si el offset excede el total de elementos
+  if (nuevoOffset >= this.totalItems) {
+    this.snackBar.open('Ya no hay más resultados.', 'Cerrar', {
+      duration: 3000
+    });
+    return;
+  }
+
+  this.pageNumber = event.pageIndex;  // Actualiza el número de página
+  this.pageSize = event.pageSize;  // Actualiza el tamaño de la página
+
+  // Si ya se seleccionaron las fechas, se realiza la consulta
+  if (this.startDateSeleccionada && this.endDateSeleccionada) {
+    const limit = this.pageSize;
+    const offset = this.pageNumber * this.pageSize;
+
+    console.log(`Paginando con limit=${limit}, offset=${offset}`);
+    
+    // Realizamos la consulta con los parámetros de paginación
+    this.reporteCitasService.searchDates(this.startDateSeleccionada, this.endDateSeleccionada, limit, offset).subscribe({
       next: (data) => {
-        if (data && data.data && data.data.length) {
-          this.datos = data.data;
-          this.columnas = Object.keys(this.datos[0]);
-          this.totalItems = data.totalItems;
-          this.cargado = true;
-        } else {
-          console.warn('No se recibieron datos.');
-        }
+        console.log('Datos recibidos:', data); // Aquí puedes ver la respuesta
+        this.createTable(data);
       },
       error: (err) => {
-        console.error('Error al obtener citas:', err);
+        console.error('Error al cambiar de página:', err);
+        this.snackBar.open('Error al cargar la nueva página.', 'Cerrar', {
+          duration: 3000
+        });
       }
     });
   }
+}
 
-  cambiarPagina(event: PageEvent): void {
-    this.pageNumber = event.pageIndex; // Índice de la página seleccionada
-    this.pageSize = event.pageSize; // Tamaño de la página seleccionado
-    this.cargarCitas();
+
+createTable(data: any): void {
+  console.log('createTable recibe:', data);
+
+  // Asegúrate de que los datos sean un array válido
+  const registros = Array.isArray(data?.data) ? data.data : [];
+
+  if (registros.length === 0) {
+    this.datos = []; // Limpiar la tabla si no hay datos
+  } else {
+    this.datos = registros; // Solo los registros de la página actual
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+  this.totalItems = data?.total || 0;
+  this.columnas = registros.length > 0 ? Object.keys(registros[0]) : [];
 
-    // Si el filtro está vacío, restauramos los datos originales
-    if (!filterValue) {
-      this.cargarCitas(); // Vuelve a cargar los datos sin filtro
-    } else {
-      // Filtrar los datos cuando hay texto en el filtro
-      this.datos = this.datos.filter(fila => {
-        return Object.keys(fila).some(key =>
-          fila[key] && fila[key].toString().toLowerCase().includes(filterValue)
-        );
-      });
-    }
+  if (this.paginator) {
+    this.paginator.length = this.totalItems; // Total de registros
+    this.paginator.pageIndex = this.pageNumber; // Página actual
   }
 
+  this.cargado = true;
+
+  if (registros.length === 0) {
+    this.snackBar.open('No hay registros para esta página.', 'Cerrar', {
+      duration: 3000
+    });
+  }
+}
+
+
+
+
+
+  // Método para descargar el reporte en formato Excel
   descargarArchivoExcel(event: Event): void {
-    event.preventDefault(); // Evita que el enlace recargue la página
-  
-    const inicio = Date.now(); // Marcar tiempo de inicio
-  
+    event.preventDefault();
+    const inicio = Date.now();
+
     const snackRef = this.snackBar.open('Descargando reporte...', 'Cerrar', {
       horizontalPosition: 'right',
       verticalPosition: 'top'
     });
-  
+
     this.reporteCitasService.descargarExcel().subscribe({
       next: (blob) => {
-        const fin = Date.now(); // Marcar tiempo de fin
-        const tiempo = (fin - inicio) / 1000; // Tiempo en segundos
-  
+        const fin = Date.now();
+        const tiempo = (fin - inicio) / 1000;
+
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
         a.download = 'reporte-citas.xlsx';
         a.click();
         URL.revokeObjectURL(url);
-  
+
         snackRef.dismiss();
         this.snackBar.open(`Descarga completada en ${tiempo.toFixed(2)} segundos.`, 'Cerrar', {
           duration: 4000,
@@ -195,7 +225,4 @@ createTable(data: any) {
       }
     });
   }
-
-  
-
-}  
+}
