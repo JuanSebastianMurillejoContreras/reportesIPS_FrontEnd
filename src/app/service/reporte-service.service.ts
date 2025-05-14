@@ -39,8 +39,8 @@ descargarExcel(fechaInicio: string, fechaFin: string): Observable<Blob> {
 
   
 searchDates(
-  fechaInicio: string,
-  fechaFin: string,
+  fechaInicio: string | null,
+  fechaFin: string | null,
   pageSize: number,
   offset: number,
   idCita?: string,
@@ -50,11 +50,14 @@ searchDates(
   cup?: string
 ): Observable<any> {
   let params = new HttpParams()
-    .set('fechaInicio', fechaInicio)
-    .set('fechaFin', fechaFin)
     .set('limit', pageSize.toString())
     .set('offset', offset.toString());
 
+  // Solo agregar las fechas si no son nulas
+  if (fechaInicio) params = params.set('fechaInicio', fechaInicio);
+  if (fechaFin) params = params.set('fechaFin', fechaFin);
+
+  // Agregar otros parámetros si existen
   if (idCita) params = params.set('idCita', idCita);
   if (identificacion) params = params.set('identificacion', identificacion);
   if (nombrePaciente) params = params.set('nombrePaciente', nombrePaciente);

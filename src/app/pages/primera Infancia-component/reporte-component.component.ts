@@ -114,18 +114,9 @@ export class ReportePrimeraInfanciaComponent implements OnInit {
     cup
   } = this.form.value;
 
-  if (!startDate || !endDate) {
-    this.snackBar.open('Por favor selecciona ambas fechas.', 'Cerrar', {
-      duration: 3000,
-      horizontalPosition: 'right',
-      verticalPosition: 'top'
-    });
-    this.isLoading = false;
-    return;
-  }
-
-  const fechaInicio = this.datePipe.transform(startDate, "yyyy-MM-dd")!;
-  const fechaFin = this.datePipe.transform(endDate, "yyyy-MM-dd")!;
+  // Siempre transformar o asignar string vacío si no hay fechas
+  const fechaInicio = startDate ? this.datePipe.transform(startDate, "yyyy-MM-dd")! : '';
+  const fechaFin = endDate ? this.datePipe.transform(endDate, "yyyy-MM-dd")! : '';
 
   this.startDateSeleccionada = fechaInicio;
   this.endDateSeleccionada = fechaFin;
@@ -162,6 +153,8 @@ export class ReportePrimeraInfanciaComponent implements OnInit {
     }
   });
 }
+
+
 
  cambiarPagina(event: PageEvent): void {
   const nuevoOffset = event.pageIndex * event.pageSize;

@@ -172,10 +172,14 @@ mat-form-field {
 .boton-buscar-limpiar {
   display: flex;
   justify-content: center;
-  gap: 20px;
-  margin: 20px 0;
-  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
 }
+
+.boton-buscar-limpiar button mat-icon {
+  margin-right: 5px;
+}
+
 /* =======================
    DESCARGAR EXCEL
 ========================== */
