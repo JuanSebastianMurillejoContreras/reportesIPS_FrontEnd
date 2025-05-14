@@ -43,7 +43,7 @@
               <td>
                 <mat-form-field appearance="outline">
                   <mat-label>Identificación</mat-label>
-                  <input matInput formControlName="identificacion">
+                  <input matInput formControlName="numeroIdentificacion">
                 </mat-form-field>
               </td>
               <td>
@@ -72,9 +72,17 @@
   </form>
 
   <div class="boton-buscar-limpiar">
-    <button mat-raised-button color="primary" (click)="onSubmit()">Buscar</button>
-    <button mat-stroked-button color="warn" (click)="limpiarFormulario()">Limpiar</button>
-  </div>
+  <button mat-raised-button color="primary" (click)="onSubmit()">
+    <mat-icon>search</mat-icon>
+    Buscar
+  </button>
+
+  <button mat-stroked-button color="warn" (click)="limpiarFormulario()">
+    <mat-icon>clear</mat-icon>
+    Limpiar
+  </button>
+</div>
+
 </div>
 
 <div class="tabla-scrollable">

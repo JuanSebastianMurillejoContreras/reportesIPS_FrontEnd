@@ -44,7 +44,7 @@ searchDates(
   pageSize: number,
   offset: number,
   idCita?: string,
-  identificacion?: string,
+  numeroIdentificacion?: string,
   nombrePaciente?: string,
   medico?: string,
   cup?: string
@@ -59,7 +59,7 @@ searchDates(
 
   // Agregar otros parámetros si existen
   if (idCita) params = params.set('idCita', idCita);
-  if (identificacion) params = params.set('identificacion', identificacion);
+  if (numeroIdentificacion) params = params.set('numeroIdentificacion', numeroIdentificacion);
   if (nombrePaciente) params = params.set('nombrePaciente', nombrePaciente);
   if (medico) params = params.set('medico', medico);
   if (cup) params = params.set('cup', cup);

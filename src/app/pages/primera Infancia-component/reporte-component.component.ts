@@ -11,6 +11,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
+import {MatIconModule} from '@angular/material/icon';
 
 
 @Component({
@@ -26,7 +27,8 @@ import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
     MatDatepickerModule,
     MatNativeDateModule,
     ReactiveFormsModule,
-    MatTabsModule
+    MatTabsModule,
+    MatIconModule
   ],
   providers: [DatePipe],
   templateUrl: './reporte-component.component.html',
@@ -62,7 +64,7 @@ export class ReportePrimeraInfanciaComponent implements OnInit {
     startDate: new FormControl(),
     endDate: new FormControl(),
     idCita: new FormControl(),
-    identificacion: new FormControl(),
+    numeroIdentificacion: new FormControl(),
     nombrePaciente: new FormControl(),
     nombreMedico: new FormControl(),
     cup: new FormControl()
@@ -108,7 +110,7 @@ export class ReportePrimeraInfanciaComponent implements OnInit {
     startDate,
     endDate,
     idCita,
-    identificacion,
+    numeroIdentificacion,
     nombrePaciente,
     medico,
     cup
@@ -137,7 +139,7 @@ export class ReportePrimeraInfanciaComponent implements OnInit {
     limit,
     offset,
     idCita,
-    identificacion,
+    numeroIdentificacion,
     nombrePaciente,
     medico,
     cup
@@ -169,7 +171,7 @@ export class ReportePrimeraInfanciaComponent implements OnInit {
 
   const {
     idCita,
-    identificacion,
+    numeroIdentificacion,
     nombrePaciente,
     medico,
     cup
@@ -184,7 +186,7 @@ export class ReportePrimeraInfanciaComponent implements OnInit {
     this.pageSize,
     this.pageNumber * this.pageSize,
     idCita,
-    identificacion,
+    numeroIdentificacion,
     nombrePaciente,
     medico,
     cup
