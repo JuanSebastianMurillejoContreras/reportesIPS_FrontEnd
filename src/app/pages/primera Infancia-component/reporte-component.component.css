@@ -138,7 +138,7 @@ p {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  justify-content: flex-start;
+  justify-content: center;
   padding: 10px 0;
 }
 
@@ -244,6 +244,7 @@ mat-form-field {
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 -1px 6px rgba(0, 0, 0, 0.05); /* sombra suave arriba */
 }
+
 
 /* =======================
    RESPONSIVE DESIGN

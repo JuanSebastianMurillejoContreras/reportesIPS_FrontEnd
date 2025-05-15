@@ -15,11 +15,13 @@ import { DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatNativeDateModule } from '@angular/material/core';
 import { CustomDateAdapter } from './custom-adapter';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [],
-  imports: [CommonModule],
-  exports: [
+  imports: [
+    CommonModule,
     MatTableModule,
     MatFormFieldModule,
     MatPaginatorModule,
@@ -32,7 +34,27 @@ import { CustomDateAdapter } from './custom-adapter';
     MatSelectModule,
     MatDatepickerModule,
     MatProgressSpinnerModule,
-    MatNativeDateModule 
+    MatNativeDateModule,
+    ReactiveFormsModule,
+    MatTabsModule,
+  ],
+  exports: [
+    CommonModule,
+    MatTableModule,
+    MatFormFieldModule,
+    MatPaginatorModule,
+    MatInputModule,
+    MatSortModule,
+    MatIconModule,
+    MatButtonModule,
+    MatSnackBarModule,
+    MatToolbarModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatProgressSpinnerModule,
+    MatNativeDateModule,
+    ReactiveFormsModule,
+    MatTabsModule,
    ],
    providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'es-ES' },

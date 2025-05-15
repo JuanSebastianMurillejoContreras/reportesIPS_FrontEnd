@@ -3,8 +3,9 @@
   <div class="titulos">
     <div class="textos">
       <h1>Reporte citas</h1>
-      <span>Aquí encontrarás el reporte de todas las citas de la IPSI</span>
-      <p>Puedes buscar por los parámetros que consideres necesarios para buscar por cita, por paciente o por
+      <span>Aquí encontrarás el reporte de todas las actividades de la IPS</span>
+      <p>Puedes buscar por los parámetros que consideres necesarios para buscar por rango de fechas, municipio, id cita,
+        número identificacion y nombre del paciente, nombre del médico y numero del CUP
         profesional.</p>
     </div>
   </div>
@@ -18,7 +19,7 @@
 
   <form [formGroup]="form">
     <mat-tab-group class="filter-tab-group" #tabGroup>
-      <mat-tab label="Buscar por Fechas">
+      <mat-tab label="Buscar">
         <div class="form-container">
           <table class="filter-table">
             <tr>
@@ -33,6 +34,30 @@
                   <mat-date-range-picker #picker></mat-date-range-picker>
                   <mat-hint>DD/MM/YYYY - DD/MM/YYYY</mat-hint>
                 </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field appearance="outline" style="width: 100%;">
+                  <mat-label>Municipio</mat-label>
+                  <mat-select formControlName="sucursales" placeholder="Seleccione un municipio">
+                    <mat-option *ngFor="let sucursal of sucursales" [value]="sucursal.razonSocial">
+                      {{ sucursal.razonSocial }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field appearance="outline" style="width: 100%;">
+                  <mat-label>Servicio</mat-label>
+                  <input type="text" matInput placeholder="Seleccione un servicio" formControlName="servicios"
+                    [matAutocomplete]="autoServicio">
+
+                  <mat-autocomplete #autoServicio="matAutocomplete" [displayWith]="displayServicio">
+                    <mat-option *ngFor="let servicio of serviciosFiltrados" [value]="servicio">
+                      {{ servicio.nombreServicio }}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+
               </td>
               <td>
                 <mat-form-field appearance="outline">
@@ -60,28 +85,30 @@
               </td>
               <td colspan="2">
                 <mat-form-field appearance="outline">
-                  <mat-label>CUP</mat-label>
-                  <input matInput formControlName="cup">
+                  <mat-label>codigoCup</mat-label>
+                  <input matInput formControlName="codigoCup">
                 </mat-form-field>
               </td>
             </tr>
           </table>
         </div>
       </mat-tab>
+      <mat-tab label="Busqueda Avanzada">
+      </mat-tab>
     </mat-tab-group>
   </form>
 
   <div class="boton-buscar-limpiar">
-  <button mat-raised-button color="primary" (click)="onSubmit()">
-    <mat-icon>search</mat-icon>
-    Buscar
-  </button>
+    <button mat-raised-button color="primary" (click)="onSubmit()">
+      <mat-icon>search</mat-icon>
+      Buscar
+    </button>
 
-  <button mat-stroked-button color="warn" (click)="limpiarFormulario()">
-    <mat-icon>clear</mat-icon>
-    Limpiar
-  </button>
-</div>
+    <button mat-stroked-button color="warn" (click)="limpiarFormulario()">
+      <mat-icon>clear</mat-icon>
+      Limpiar
+    </button>
+  </div>
 
 </div>
 
@@ -105,6 +132,6 @@
   <p *ngIf="cargado && !datos.length">No hay datos disponibles.</p>
 
   <!-- Paginador -->
-  <mat-paginator class="paginador-flotante" *ngIf="!isFiltering" [pageSizeOptions]="[5, 10, 25]" [pageSize]="pageSize"
-    [length]="totalItems" (page)="cambiarPagina($event)" aria-label="Paginador de citas">
+  <mat-paginator class="paginador-flotante" *ngIf="!isFiltering" [pageSizeOptions]="[5, 10, 25, 50, 100]"
+    [pageSize]="pageSize" [length]="totalItems" (page)="cambiarPagina($event)" aria-label="Paginador de citas">
   </mat-paginator>

@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 export class ReporteCitasService {
 
   private get baseUrl(): string {
-    return `${this.apiUrl}/api/reportes/citas`;
+    return `${this.apiUrl}/api/reportes/actividades`;
   }
 
   constructor(
@@ -43,11 +43,13 @@ searchDates(
   fechaFin: string | null,
   pageSize: number,
   offset: number,
+  razonSocial: string,
+  consecutivoServicio: string,
   idCita?: string,
   numeroIdentificacion?: string,
   nombrePaciente?: string,
-  medico?: string,
-  cup?: string
+  nombreMedico?: string,
+  codigoCup?: string
 ): Observable<any> {
   let params = new HttpParams()
     .set('limit', pageSize.toString())
@@ -58,11 +60,13 @@ searchDates(
   if (fechaFin) params = params.set('fechaFin', fechaFin);
 
   // Agregar otros parámetros si existen
+  if (razonSocial) params = params.set('razonSocial', razonSocial);
+  if (consecutivoServicio) params = params.set('consecutivoServicio', consecutivoServicio);
   if (idCita) params = params.set('idCita', idCita);
   if (numeroIdentificacion) params = params.set('numeroIdentificacion', numeroIdentificacion);
   if (nombrePaciente) params = params.set('nombrePaciente', nombrePaciente);
-  if (medico) params = params.set('medico', medico);
-  if (cup) params = params.set('cup', cup);
+  if (nombreMedico) params = params.set('nombreMedico', nombreMedico);
+  if (codigoCup) params = params.set('codigoCup', codigoCup);
 
   return this.http.get(`${this.baseUrl}/fechas`, { params });
 }
