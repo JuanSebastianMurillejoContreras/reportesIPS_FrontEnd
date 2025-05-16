@@ -20,6 +20,7 @@ import { ServiciosService } from '../../service/servicios-service.service';
 import { Servicio } from '../../model/Servicio';
 import { map } from 'rxjs';
 import { MatMenuModule } from '@angular/material/menu';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -40,7 +41,8 @@ import { MatMenuModule } from '@angular/material/menu';
     MatTabsModule,
     MatIconModule,
     MatAutocompleteModule,
-    MatMenuModule
+    MatMenuModule,
+    FormsModule
   ],
   providers: [DatePipe],
   templateUrl: './reporte-component.component.html',
@@ -60,6 +62,8 @@ export class ReportePrimeraInfanciaComponent implements OnInit {
 
   isFiltering: boolean = false;
   form!: FormGroup;
+
+  formValido: boolean = false;
 
   isLoading = false;
 
@@ -91,7 +95,8 @@ export class ReportePrimeraInfanciaComponent implements OnInit {
       numeroIdentificacion: new FormControl(),
       nombrePaciente: new FormControl(),
       nombreMedico: new FormControl(),
-      codigoCup: new FormControl()
+      cup: new FormControl(),
+      estadoCita: new FormControl()
     });
 
     this.form.get('servicios')!.valueChanges.pipe(
@@ -104,7 +109,35 @@ export class ReportePrimeraInfanciaComponent implements OnInit {
     ).subscribe(filtrados => {
       this.serviciosFiltrados = filtrados;
     });
+
+    // 🔹 Actualizar estado del botón Buscar
+    this.form.valueChanges.subscribe(() => {
+      this.formValido = !this.isFormEmpty();
+    });
+    //  para que el estado inicial del botón sea correcto.
+    this.form.updateValueAndValidity();
+    this.formValido = !this.isFormEmpty();
+
   }
+
+  isFormEmpty(): boolean {
+    const values = this.form.value;
+
+    return Object.values(values).every(value => {
+      if (value === null || value === undefined || value === '') return true;
+
+      if (typeof value === 'object') {
+        // Si es una fecha (Date) o similar, se considera válido si no es null
+        if (value instanceof Date) return false;
+
+        // Si es objeto tipo Servicio o Sucursal
+        return Object.values(value).every(v => v === null || v === '');
+      }
+
+      return false;
+    });
+  }
+
 
   displayServicio(servicio: Servicio): string {
     return servicio?.nombreServicio || '';
@@ -145,6 +178,7 @@ export class ReportePrimeraInfanciaComponent implements OnInit {
     this.search(true);
   }
 
+
   limpiarFormulario(): void {
     this.form.reset();
     this.pageNumber = 0;
@@ -180,7 +214,8 @@ export class ReportePrimeraInfanciaComponent implements OnInit {
       numeroIdentificacion,
       nombrePaciente,
       nombreMedico,
-      codigoCup
+      cup,
+      estadoCita
     } = this.form.value;
 
     const fechaInicio = startDate ? this.datePipe.transform(startDate, "yyyy-MM-dd")! : '';
@@ -210,7 +245,8 @@ export class ReportePrimeraInfanciaComponent implements OnInit {
       numeroIdentificacion,
       nombrePaciente,
       nombreMedico,
-      codigoCup
+      cup,
+      estadoCita
     ).subscribe({
       next: (data) => {
         this.createTable(data);
@@ -242,7 +278,8 @@ export class ReportePrimeraInfanciaComponent implements OnInit {
       numeroIdentificacion,
       nombrePaciente,
       nombreMedico,
-      codigoCup
+      cup,
+      estadoCita
     } = this.form.value;
 
     const fechaInicio = this.startDateSeleccionada;
@@ -259,7 +296,8 @@ export class ReportePrimeraInfanciaComponent implements OnInit {
       numeroIdentificacion,
       nombrePaciente,
       nombreMedico,
-      codigoCup
+      cup,
+      estadoCita
     ).subscribe({
       next: (data) => {
         this.createTable(data);
@@ -295,48 +333,67 @@ export class ReportePrimeraInfanciaComponent implements OnInit {
     }
   }
 
-getColorByEstado(estado: string): string {
-  switch (estado) {
-    case 'Agendada': return '#007bff';
-    case 'Cancelada': return '#dc3545';
-    case 'Cancelada facturador': return '#dc3545';
-    case 'No cumplida': return '#fd7e14';
-    case 'Abierta': return '#28a745';
-    case 'Cerrada': return '#6c757d';
-    case 'Liquidada': return '#17a2b8';
-    case 'Agrupada': return '#ffc107';
-    case 'Reagendada': return '#6610f2';
-    case 'Reabierta': return '#20c997';
-    default: return 'transparent';
+  getColorByEstado(estado: string): string {
+    switch (estado) {
+      case 'Agendada': return '#1565c0';
+      case 'Cancelada': return '#b00020';
+      case 'Cancelada facturador': return '#7a1820';
+      case 'No cumplida': return '#c27c00';
+      case 'Abierta': return '#5bff5b';
+      case 'Cerrada': return '#545454';
+      case 'Liquidada': return '#136a8a';
+      case 'Agrupada': return '#b38f00';
+      case 'Reagendada': return '#5a35bf';
+      case 'Reabierta': return '#1f937d';
+      default: return 'transparent';
+    }
   }
-}
+
+
 
   // Lógica para alternar visibilidad (si la necesitas)
   toggleLeyenda() {
     this.mostrarLeyenda = !this.mostrarLeyenda;
   }
 
-estados = [
-  { clase: 'agendada', nombre: 'Agendada' },
-  { clase: 'cancelada', nombre: 'Cancelada' },
-  { clase: 'cancelada-facturador', nombre: 'Cancelada facturador' },
-  { clase: 'no-cumplida', nombre: 'No cumplida' },
-  { clase: 'abierta', nombre: 'Abierta' },
-  { clase: 'cerrada', nombre: 'Cerrada' },
-  { clase: 'liquidada', nombre: 'Liquidada' },
-  { clase: 'agrupada', nombre: 'Agrupada' },
-  { clase: 'reagendada', nombre: 'Reagendada' },
-  { clase: 'reabierta', nombre: 'Reabierta' }
-];
+  estados = [
+    { clase: 'agendada', nombre: 'Agendada' },
+    { clase: 'cancelada', nombre: 'Cancelada' },
+    { clase: 'cancelada-facturador', nombre: 'Cancelada facturador' },
+    { clase: 'no-cumplida', nombre: 'No cumplida' },
+    { clase: 'abierta', nombre: 'Abierta' },
+    { clase: 'cerrada', nombre: 'Cerrada' },
+    { clase: 'liquidada', nombre: 'Liquidada' },
+    { clase: 'agrupada', nombre: 'Agrupada' },
+    { clase: 'reagendada', nombre: 'Reagendada' },
+    { clase: 'reabierta', nombre: 'Reabierta' }
+  ];
 
 
-onFilaClick(idCita: number) {
-  if (this.selectedIdCita === idCita) {
-    this.selectedIdCita = null; // Desactivar selección si clickeas de nuevo la misma
-  } else {
-    this.selectedIdCita = idCita;
+  // Puedes usar solo números o agregar descripciones si lo prefieres
+  estadosCita: { valor: number, descripcion: string }[] = [
+    { valor: 1, descripcion: 'Agendada' },
+    { valor: 2, descripcion: 'Cancelada' },
+    { valor: 3, descripcion: 'Cancelada' },
+    { valor: 4, descripcion: 'No cumplida' },
+    { valor: 5, descripcion: 'Abierta' },
+    { valor: 6, descripcion: 'Cerrada' },
+    { valor: 7, descripcion: 'Liquidada' },
+    { valor: 8, descripcion: 'Agrupada' },
+    { valor: 9, descripcion: 'Reagendada' },
+    { valor: 10, descripcion: 'Cancelada' },
+    { valor: 11, descripcion: 'Cancelada' },
+    { valor: 12, descripcion: 'Reabierta' }
+  ];
+
+
+  onFilaClick(idCita: number) {
+    if (this.selectedIdCita === idCita) {
+      this.selectedIdCita = null; // Desactivar selección si clickeas de nuevo la misma
+    } else {
+      this.selectedIdCita = idCita;
+    }
   }
-}
 
 
   descargarArchivoExcel(event: Event): void {

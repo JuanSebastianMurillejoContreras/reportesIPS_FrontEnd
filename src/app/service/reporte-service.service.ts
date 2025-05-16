@@ -49,7 +49,8 @@ searchDates(
   numeroIdentificacion?: string,
   nombrePaciente?: string,
   nombreMedico?: string,
-  codigoCup?: string
+  cup?: string,
+  estadoCita?: number
 ): Observable<any> {
   let params = new HttpParams()
     .set('limit', pageSize.toString())
@@ -66,7 +67,9 @@ searchDates(
   if (numeroIdentificacion) params = params.set('numeroIdentificacion', numeroIdentificacion);
   if (nombrePaciente) params = params.set('nombrePaciente', nombrePaciente);
   if (nombreMedico) params = params.set('nombreMedico', nombreMedico);
-  if (codigoCup) params = params.set('codigoCup', codigoCup);
+  if (cup) params = params.set('cup', cup);
+  if (estadoCita) params = params.set('estadoCita', estadoCita);
+
 
   return this.http.get(`${this.baseUrl}/fechas`, { params });
 }

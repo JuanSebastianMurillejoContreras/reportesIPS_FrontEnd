@@ -18,6 +18,13 @@ h1 {
   margin: 0 0 0 20px;
 }
 
+h3 {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0 0 10 20px;
+}
+
+
 span {
   font-size: 1.2rem;
   font-weight: 600;
@@ -49,7 +56,6 @@ p {
 }
 
 
-
 /* =======================
    TABLA DE DATOS
 ========================== */
@@ -62,7 +68,6 @@ p {
   margin-left: 0px;
   margin-right: 0px;
   box-sizing: content-box;
-  
 }
 
 .mat-table, .tabla-estilizada {
@@ -77,10 +82,10 @@ p {
   position: sticky;
   top: 0;
   z-index: 10;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
   color: #ffffff;
-  background-color: #e3f2fd !important;
+  background-color: #329547 !important;
   text-transform: uppercase;
   padding: 10px;
   border-bottom: 0px solid #ddd;
@@ -93,7 +98,7 @@ p {
   z-index: 2;
   background-color: #e7e7e7;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #000000;
+  color: #ffffff;
   font-weight: bolder;
   text-align: left;
   vertical-align: middle;
@@ -132,7 +137,7 @@ p {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  justify-content: center;
+  justify-content: left;
   padding: 5px 0;
 }
 
@@ -159,6 +164,8 @@ mat-form-field {
 .mat-datepicker-toggle {
   margin-right: 8px;
 }
+
+
 
 /* =======================
    BOTÓN BUSCAR / LIMPIAR
@@ -265,7 +272,7 @@ mat-form-field {
    ESTADO CITAS 
 ========================== */
 .fila-iluminada {
-  background-color: #d9f3dc !important; /* Amarillo pálido para resaltar */
+  background-color: #e9f7ef !important; /* Amarillo pálido para resaltar */
   transition: background-color 0.3s ease;
 }
 
@@ -361,6 +368,7 @@ mat-form-field {
 .estado-agrupada { background-color: #b38f00; border-color: #b38f00; }
 .estado-reagendada { background-color: #5a35bf; border-color: #5a35bf; }
 .estado-reabierta { background-color: #1f937d; border-color: #1f937d; }
+
 
 
 /* =======================

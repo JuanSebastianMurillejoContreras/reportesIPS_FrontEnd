@@ -2,11 +2,9 @@
 
   <div class="titulos">
     <div class="textos">
-      <h1>Reporte citas</h1>
+      <h1>Reporte actividades</h1>
       <span>Aquí encontrarás el reporte de todas las actividades de la IPS</span>
-      <p>Puedes buscar por los parámetros que consideres necesarios para buscar por rango de fechas, municipio, id cita,
-        número identificacion y nombre del paciente, nombre del médico y numero del CUP
-        profesional.</p>
+
     </div>
     <div class="descargar-excel">
       <a href="#" (click)="descargarArchivoExcel($event)" title="Descargar archivo Excel"
@@ -21,9 +19,20 @@
     <mat-tab-group class="filter-tab-group" #tabGroup>
       <mat-tab label="Buscar">
         <div class="form-container">
+
+          <!-- 🔹 SECCIÓN 1: INFORMACIÓN DE LA CITA -->
+          <h3>Información de la cita</h3>
           <table class="filter-table">
             <tr>
+              <td>
+                <!-- idCita -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Id cita</mat-label>
+                  <input matInput formControlName="idCita">
+                </mat-form-field>
+              </td>
               <td colspan="2">
+                <!-- fechas -->
                 <mat-form-field appearance="outline">
                   <mat-label>Selecciona fechas</mat-label>
                   <mat-date-range-input [rangePicker]="picker">
@@ -36,6 +45,124 @@
                 </mat-form-field>
               </td>
               <td>
+                <!-- Estado -->
+                <mat-form-field appearance="outline" style="width: 100%;">
+                  <mat-label>Estado</mat-label>
+                  <mat-select formControlName="estadoCita">
+                    <mat-option *ngFor="let estado of estadosCita" [value]="estado.valor">
+                      {{ estado.descripcion }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+              <td>
+                <!-- Identificación -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Identificación</mat-label>
+                  <input matInput formControlName="numeroIdentificacion">
+                </mat-form-field>
+              </td>
+              <td>
+                <!-- Nombre paciente -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Nombre paciente</mat-label>
+                  <input matInput formControlName="nombrePaciente">
+                </mat-form-field>
+              </td>
+            </tr>
+          </table>
+
+          <!-- 🔹 SECCIÓN 2: INFORMACIÓN DE LA ATENCIÓN -->
+          <h3>Información de la atención</h3>
+          <table class="filter-table">
+            <tr>
+              <td>
+                <!-- Servicio -->
+                <mat-form-field appearance="outline" style="width: 100%;">
+                  <mat-label>Servicio</mat-label>
+                  <input type="text" matInput placeholder="Seleccione un servicio" formControlName="servicios"
+                    [matAutocomplete]="autoServicio">
+                  <mat-autocomplete #autoServicio="matAutocomplete" [displayWith]="displayServicio">
+                    <mat-option *ngFor="let servicio of serviciosFiltrados" [value]="servicio">
+                      {{ servicio.nombreServicio }}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </td>
+              <td colspan="2">
+                <!-- Código CUP -->
+                <mat-form-field appearance="outline">
+                  <mat-label>CUP Codigo o nombre</mat-label>
+                  <input matInput formControlName="cup">
+                </mat-form-field>
+              </td>            
+              <td>
+                <!-- Curso de vida -->
+                <mat-form-field appearance="outline" style="width: 100%;">
+                  <mat-label>Curso de vida</mat-label>
+                  <mat-select placeholder="Seleccione un curso de vida">
+                    <mat-option></mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+              <td>
+                <!-- Nombre médico -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Nombre médico</mat-label>
+                  <input matInput formControlName="nombreMedico">
+                </mat-form-field>
+              </td>
+              <td>
+                <!-- Nombre agendador -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Nombre agendador</mat-label>
+                  <input matInput>
+                </mat-form-field>
+              </td>
+            </tr>
+          </table>
+
+          <!-- 🔹 SECCIÓN 3: INFORMACIÓN DEL PACIENTE -->
+          <h3>Información del paciente</h3>
+          <table class="filter-table">
+            <tr>
+              <td>
+                <!-- Número identificación -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Número identificación</mat-label>
+                  <input matInput formControlName="numeroIdentificacion">
+                </mat-form-field>
+              </td>
+              <td>
+                <!-- Nombre paciente -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Nombre paciente</mat-label>
+                  <input matInput formControlName="nombrePaciente">
+                </mat-form-field>
+              </td>
+              <td>
+                <!-- Género paciente -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Genero</mat-label>
+                  <input matInput>
+                </mat-form-field>
+              </td>
+              <td>
+                <!-- Régimen paciente -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Régimen</mat-label>
+                  <input matInput>
+                </mat-form-field>
+              </td>
+            </tr>
+          </table>
+
+          <!-- 🔹 SECCIÓN 4: INFORMACIÓN ADMINISTRADORA -->
+          <h3>Información administrativa</h3>
+          <table class="filter-table">
+            <tr>
+              <td>
+                <!-- Municipio -->
                 <mat-form-field appearance="outline" style="width: 100%;">
                   <mat-label>Municipio</mat-label>
                   <mat-select formControlName="sucursales" placeholder="Seleccione un municipio">
@@ -46,63 +173,42 @@
                 </mat-form-field>
               </td>
               <td>
+                <!-- Contrato -->
                 <mat-form-field appearance="outline" style="width: 100%;">
-                  <mat-label>Servicio</mat-label>
-                  <input type="text" matInput placeholder="Seleccione un servicio" formControlName="servicios"
-                    [matAutocomplete]="autoServicio">
-
-                  <mat-autocomplete #autoServicio="matAutocomplete" [displayWith]="displayServicio">
-                    <mat-option *ngFor="let servicio of serviciosFiltrados" [value]="servicio">
-                      {{ servicio.nombreServicio }}
-                    </mat-option>
-                  </mat-autocomplete>
-                </mat-form-field>
-
-              </td>
-              <td>
-                <mat-form-field appearance="outline">
-                  <mat-label>Id cita</mat-label>
-                  <input matInput formControlName="idCita">
+                  <mat-label>Contrato</mat-label>
+                  <mat-select placeholder="Seleccione un curso de vida">
+                    <mat-option></mat-option>
+                  </mat-select>
                 </mat-form-field>
               </td>
               <td>
-                <mat-form-field appearance="outline">
-                  <mat-label>Identificación</mat-label>
-                  <input matInput formControlName="numeroIdentificacion">
-                </mat-form-field>
-              </td>
-              <td>
-                <mat-form-field appearance="outline">
-                  <mat-label>Nombre paciente</mat-label>
-                  <input matInput formControlName="nombrePaciente">
-                </mat-form-field>
-              </td>
-              <td>
-                <mat-form-field appearance="outline">
-                  <mat-label>Médico</mat-label>
-                  <input matInput formControlName="nombreMedico">
-                </mat-form-field>
-              </td>
-              <td colspan="2">
-                <mat-form-field appearance="outline">
-                  <mat-label>codigoCup</mat-label>
-                  <input matInput formControlName="codigoCup">
+                <!-- Número contrato -->
+                <mat-form-field appearance="outline" style="width: 100%;">
+                  <mat-label>Número contrato</mat-label>
+                  <mat-select placeholder="Seleccione un curso de vida">
+                    <mat-option></mat-option>
+                  </mat-select>
                 </mat-form-field>
               </td>
             </tr>
           </table>
+
         </div>
       </mat-tab>
+
       <mat-tab label="Busqueda avanzada">
       </mat-tab>
     </mat-tab-group>
   </form>
 
+
   <div class="contenedor-botones-leyenda">
     <div class="boton-buscar-limpiar">
-      <button mat-raised-button color="primary" (click)="onSubmit()">
-        <mat-icon>search</mat-icon> Buscar
+      <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!formValido">
+        Buscar
       </button>
+
+
 
       <button mat-stroked-button color="warn" (click)="limpiarFormulario()">
         <mat-icon>clear</mat-icon> Limpiar
@@ -110,10 +216,10 @@
     </div>
   </div>
 
- <button mat-fab color="primary" [matMenuTriggerFor]="menuLeyenda" class="boton-flotante-leyenda"
-        matTooltip="Ver leyenda de estados" aria-label="Ver leyenda de estados">
-  <mat-icon>info</mat-icon>
-</button>
+  <button mat-fab color="primary" [matMenuTriggerFor]="menuLeyenda" class="boton-flotante-leyenda"
+    matTooltip="Ver leyenda de estados" aria-label="Ver leyenda de estados">
+    <mat-icon>info</mat-icon>
+  </button>
 
 
   <mat-menu #menuLeyenda="matMenu" class="leyenda-popover">
