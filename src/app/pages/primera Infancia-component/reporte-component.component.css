@@ -2,10 +2,9 @@
    ESTILOS GENERALES
 ========================== */
 
-/*.contenido {
-  background-color: #ffffff;
-}*/
-
+.contenido {
+    background-color: #f8fafc;  /* AGREGADO: fondo general claro */
+}
 
 h1, span, p {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -14,19 +13,19 @@ h1, span, p {
 }
 
 h1 {
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 600;
   margin: 0 0 0 20px;
 }
 
 span {
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   font-weight: 600;
   margin: 0 0 0 20px;
 }
 
 p {
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 400;
   margin: 0 0 0 20px;
 }
@@ -57,13 +56,13 @@ p {
 
 .tabla-container {
   width: 100%;
-  /*overflow-x: auto; /* ✅ Scroll horizontal */
   padding: 0px;
   margin-top: 0px;
-  margin-bottom: 0px;
+  margin-bottom: 60px;
   margin-left: 0px;
   margin-right: 0px;
   box-sizing: content-box;
+  
 }
 
 .mat-table, .tabla-estilizada {
@@ -80,8 +79,8 @@ p {
   z-index: 10;
   font-size: 16px;
   font-weight: bold;
-  color: #2c3e50;
-  background-color: #e5e8e8 !important;
+  color: #ffffff;
+  background-color: #4e8f50 !important;
   text-transform: uppercase;
   padding: 10px;
   border-bottom: 0px solid #ddd;
@@ -94,7 +93,7 @@ p {
   z-index: 2;
   background-color: #e7e7e7;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #2c3e50;
+  color: #ffffff;
   font-weight: bolder;
   text-align: left;
   vertical-align: middle;
@@ -111,10 +110,7 @@ p {
   border-bottom: 1px solid #e5e7e9;
 }
 
-.mat-row:hover {
-  background-color: #f9f9f9;
-  cursor: pointer;
-}
+
 
 /* =======================
    FORMULARIOS
@@ -133,7 +129,6 @@ p {
   box-sizing: border-box;
 }
 
-/* ✅ NUEVO ESTILO PARA MOSTRAR EL FORMULARIO EN UNA SOLA LÍNEA */
 .filter-table {
   display: flex;
   flex-wrap: wrap;
@@ -174,6 +169,7 @@ mat-form-field {
   justify-content: center;
   gap: 1rem;
   margin-top: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .boton-buscar-limpiar button mat-icon {
@@ -236,15 +232,123 @@ mat-form-field {
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 100%;
-  z-index: 999;
+  width: 98%;
+  z-index: 1000;
+
+  /* Fondo elegante y translúcido */
   background-color: transparent;
-  backdrop-filter: blur(4px); /* opcional: efecto de difuminado */
-  padding: 8px 20px;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 -1px 6px rgba(0, 0, 0, 0.05); /* sombra suave arriba */
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px); /* soporte Safari */
+
+  /* Borde superior sutil */
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+
+  /* Sombra superior más difusa */
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.06);
+
+  /* Espaciado cómodo */
+  padding: 5px 24px;
+
+  /* Suave transición (si ocultas o muestras) */
+  transition: all 0.3s ease;
+
+  /* Tipografía clara y alineación */
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
+
+
+/* =======================
+   ESTADO CITAS 
+========================== */
+.fila-iluminada {
+  background-color: #d9f3dc !important; /* Amarillo pálido para resaltar */
+  transition: background-color 0.3s ease;
+}
+
+.estado-leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 13px;
+  background: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  justify-content: center;  /* Centra horizontalmente */
+  align-items: center;      /* Centra verticalmente */
+}
+
+.estado-leyenda-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 130px;
+  
+}
+
+.estado-cuadro {
+  width: 12px;
+  height: 14px;
+  border-radius: 3px;
+  border: 2px solid transparent;
+}
+
+/* Colores suaves con borde de color sólido */
+.estado-agendada { 
+  background-color: #1565c0; 
+  border-color: #1565c0; 
+}
+
+.estado-cancelada { 
+  background-color: #b00020; 
+  border-color: #b00020; 
+}
+
+.estado-cancelada-facturador { 
+  background-color: #7a1820; 
+  border-color: #7a1820; 
+}
+
+.estado-no-cumplida { 
+  background-color: #c27c00; 
+  border-color: #c27c00; 
+}
+
+.estado-abierta { 
+  background-color: #5bff5b; 
+  border-color: #5bff5b; 
+}
+
+.estado-cerrada { 
+  background-color: #545454; 
+  border-color: #545454; 
+}
+
+.estado-liquidada { 
+  background-color: #136a8a; 
+  border-color: #136a8a; 
+}
+
+.estado-agrupada { 
+  background-color: #b38f00; 
+  border-color: #b38f00; 
+}
+
+.estado-reagendada { 
+  background-color: #5a35bf; 
+  border-color: #5a35bf; 
+}
+
+.estado-reabierta { 
+  background-color: #1f937d; 
+  border-color: #1f937d; 
+}
 
 /* =======================
    RESPONSIVE DESIGN

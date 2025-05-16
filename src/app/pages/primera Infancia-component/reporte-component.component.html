@@ -110,8 +110,49 @@
     </button>
   </div>
 
+  <div class="estado-leyenda">
+    <div class="estado-leyenda-item">
+      <div class="estado-cuadro estado-agendada"></div>
+      <span>Agendada</span>
+    </div>
+    <div class="estado-leyenda-item">
+      <div class="estado-cuadro estado-cancelada"></div>
+      <span>Cancelada</span>
+    </div>
+    <div class="estado-leyenda-item">
+      <div class="estado-cuadro estado-cancelada-facturador"></div>
+      <span>Cancelada facturador</span>
+    </div>
+    <div class="estado-leyenda-item">
+      <div class="estado-cuadro estado-no-cumplida"></div>
+      <span>No cumplida</span>
+    </div>
+    <div class="estado-leyenda-item">
+      <div class="estado-cuadro estado-abierta"></div>
+      <span>Abierta</span>
+    </div>
+    <div class="estado-leyenda-item">
+      <div class="estado-cuadro estado-cerrada"></div>
+      <span>Cerrada</span>
+    </div>
+    <div class="estado-leyenda-item">
+      <div class="estado-cuadro estado-liquidada"></div>
+      <span>Liquidada</span>
+    </div>
+    <div class="estado-leyenda-item">
+      <div class="estado-cuadro estado-agrupada"></div>
+      <span>Agrupada</span>
+    </div>
+    <div class="estado-leyenda-item">
+      <div class="estado-cuadro estado-reagendada"></div>
+      <span>Reagendada</span>
+    </div>
+    <div class="estado-leyenda-item">
+      <div class="estado-cuadro estado-reabierta"></div>
+      <span>Reabierta</span>
+    </div>
+  </div>
 </div>
-
 <div class="tabla-scrollable">
   <!-- Tabla de datos -->
   <div class="tabla-container">
@@ -124,14 +165,19 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="columnas"></tr>
-      <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnas;" (click)="onFilaClick(row['id_cita'])"
+        [class.fila-iluminada]="selectedIdCita?.toString() === row['id_cita']?.toString()"
+        [ngStyle]="{'border-left': '10px solid ' + getColorByEstado(row['estado_cita'])}">
+      </tr>
     </table>
   </div>
+</div>
 
-  <!-- Mensajes de estado -->
-  <p *ngIf="cargado && !datos.length">No hay datos disponibles.</p>
 
-  <!-- Paginador -->
-  <mat-paginator class="paginador-flotante" *ngIf="!isFiltering" [pageSizeOptions]="[5, 10, 25, 50, 100]"
-    [pageSize]="pageSize" [length]="totalItems" (page)="cambiarPagina($event)" aria-label="Paginador de citas">
-  </mat-paginator>
+<!-- Mensajes de estado -->
+<p *ngIf="cargado && !datos.length">No hay datos disponibles.</p>
+
+<!-- Paginador -->
+<mat-paginator class="paginador-flotante" *ngIf="!isFiltering" [pageSizeOptions]="[5, 10, 25, 50, 100, 500, 1000]"
+  [pageSize]="pageSize" [length]="totalItems" (page)="cambiarPagina($event)" aria-label="Paginador de citas">
+</mat-paginator>

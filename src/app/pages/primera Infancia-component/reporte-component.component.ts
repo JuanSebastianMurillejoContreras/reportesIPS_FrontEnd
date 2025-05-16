@@ -63,6 +63,8 @@ export class ReportePrimeraInfanciaComponent implements OnInit {
   servicios: Servicio[] = [];
   serviciosFiltrados: Servicio[] = [];
 
+  selectedIdCita: number | null = null;
+
   @ViewChild('tabGroup') tabGroup!: MatTabGroup;
   @ViewChild('paginator') paginator: any;
 
@@ -288,6 +290,32 @@ export class ReportePrimeraInfanciaComponent implements OnInit {
     }
   }
 
+getColorByEstado(estado: string): string {
+  switch (estado) {
+    case 'Agendada': return '#007bff';
+    case 'Cancelada': return '#dc3545';
+    case 'Cancelada facturador': return '#dc3545';
+    case 'No cumplida': return '#fd7e14';
+    case 'Abierta': return '#28a745';
+    case 'Cerrada': return '#6c757d';
+    case 'Liquidada': return '#17a2b8';
+    case 'Agrupada': return '#ffc107';
+    case 'Reagendada': return '#6610f2';
+    case 'Reabierta': return '#20c997';
+    default: return 'transparent';
+  }
+}
+
+
+onFilaClick(idCita: number) {
+  if (this.selectedIdCita === idCita) {
+    this.selectedIdCita = null; // Desactivar selección si clickeas de nuevo la misma
+  } else {
+    this.selectedIdCita = idCita;
+  }
+}
+
+
   descargarArchivoExcel(event: Event): void {
     event.preventDefault();
     const inicio = Date.now();
@@ -342,4 +370,6 @@ export class ReportePrimeraInfanciaComponent implements OnInit {
       }
     });
   }
+
+
 }
