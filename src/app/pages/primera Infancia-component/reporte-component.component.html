@@ -93,7 +93,7 @@
           </table>
         </div>
       </mat-tab>
-      <mat-tab label="Busqueda Avanzada">
+      <mat-tab label="Busqueda avanzada">
       </mat-tab>
     </mat-tab-group>
   </form>
@@ -108,11 +108,13 @@
         <mat-icon>clear</mat-icon> Limpiar
       </button>
     </div>
-
-    <button mat-button [matMenuTriggerFor]="menuLeyenda" class="leyenda-toggle">
-      <mat-icon>info</mat-icon> Ver leyenda de estados
-    </button>
   </div>
+
+ <button mat-fab color="primary" [matMenuTriggerFor]="menuLeyenda" class="boton-flotante-leyenda"
+        matTooltip="Ver leyenda de estados" aria-label="Ver leyenda de estados">
+  <mat-icon>info</mat-icon>
+</button>
+
 
   <mat-menu #menuLeyenda="matMenu" class="leyenda-popover">
     <div class="estado-leyenda">

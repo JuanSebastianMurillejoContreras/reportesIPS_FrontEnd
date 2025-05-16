@@ -13,19 +13,19 @@ h1, span, p {
 }
 
 h1 {
-  font-size: 2rem;
-  font-weight: 600;
-  margin: 0 0 0 20px;
-}
-
-span {
   font-size: 1.5rem;
   font-weight: 600;
   margin: 0 0 0 20px;
 }
 
-p {
+span {
   font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 0 20px;
+}
+
+p {
+  font-size: 1.1rem;
   font-weight: 400;
   margin: 0 0 0 20px;
 }
@@ -80,7 +80,7 @@ p {
   font-size: 16px;
   font-weight: bold;
   color: #ffffff;
-  background-color: #73a77e !important;
+  background-color: #e3f2fd !important;
   text-transform: uppercase;
   padding: 10px;
   border-bottom: 0px solid #ddd;
@@ -93,23 +93,22 @@ p {
   z-index: 2;
   background-color: #e7e7e7;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #ffffff;
+  color: #000000;
   font-weight: bolder;
   text-align: left;
   vertical-align: middle;
   padding: 12px;
-  border-bottom: 2px solid #ddd;
+  border-bottom: 0px solid #ddd;
 }
 
 .fila-tabla {
   font-size: 13px;
   color: #000000d5;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  text-align: left;
-  padding: 10px;
-  border-bottom: 1px solid #e5e7e9;
+  text-align: center;
+  padding: 1px;
+  border-bottom: 2px solid #e5e7e9;
 }
-
 
 
 /* =======================
@@ -132,9 +131,9 @@ p {
 .filter-table {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 10px;
   justify-content: center;
-  padding: 10px 0;
+  padding: 5px 0;
 }
 
 .filter-table td {
@@ -168,12 +167,12 @@ mat-form-field {
   display: flex;
   justify-content: center;
   gap: 1rem;
-  margin-top: 1rem;
+  margin-top: 0.2rem;
   margin-bottom: 1.5rem;
 }
 
 .boton-buscar-limpiar button mat-icon {
-  margin-right: 5px;
+  margin-right: 20px;
 }
 
 /* =======================
@@ -270,6 +269,14 @@ mat-form-field {
   transition: background-color 0.3s ease;
 }
 
+.boton-flotante-leyenda {
+  position: fixed;
+  bottom: 4.5rem;
+  right: 0.5rem;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
 .estado-leyenda {
   display: left;
   flex-wrap: wrap;
@@ -311,6 +318,8 @@ mat-form-field {
   gap: 1rem;
   justify-content: center;
   flex-wrap: wrap;
+  margin-top: 1rem;  /* Reduce margen superior */
+  margin-bottom: 0px; /* Puedes ajustar */
 }
 
 .leyenda-toggle {
@@ -354,8 +363,6 @@ mat-form-field {
 .estado-reabierta { background-color: #1f937d; border-color: #1f937d; }
 
 
-
-
 /* =======================
    RESPONSIVE DESIGN
 ========================== */
@@ -371,6 +378,13 @@ mat-form-field {
  .tabla-container {
   margin-bottom: 95px; /* Deja espacio suficiente para el paginador fijo */
   overflow-x: auto;
+}
+
+@media (max-width: 600px) {
+  .boton-flotante-leyenda {
+    bottom: 1rem;
+    right: 1rem;
+  }
 }
 
 }
