@@ -80,7 +80,7 @@ p {
   font-size: 16px;
   font-weight: bold;
   color: #ffffff;
-  background-color: #4e8f50 !important;
+  background-color: #73a77e !important;
   text-transform: uppercase;
   padding: 10px;
   border-bottom: 0px solid #ddd;
@@ -236,7 +236,7 @@ mat-form-field {
   z-index: 1000;
 
   /* Fondo elegante y translúcido */
-  background-color: transparent;
+  background-color: white;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px); /* soporte Safari */
 
@@ -271,9 +271,9 @@ mat-form-field {
 }
 
 .estado-leyenda {
-  display: flex;
+  display: left;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 1rem;
   margin-bottom: 1rem;
   font-size: 13px;
   background: #ffffff;
@@ -289,7 +289,6 @@ mat-form-field {
   align-items: center;
   gap: 0.4rem;
   min-width: 130px;
-  
 }
 
 .estado-cuadro {
@@ -299,56 +298,63 @@ mat-form-field {
   border: 2px solid transparent;
 }
 
-/* Colores suaves con borde de color sólido */
-.estado-agendada { 
-  background-color: #1565c0; 
-  border-color: #1565c0; 
+.contenedor-botones-leyenda {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra los botones horizontalmente */
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
-.estado-cancelada { 
-  background-color: #b00020; 
-  border-color: #b00020; 
+.boton-buscar-limpiar {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
-.estado-cancelada-facturador { 
-  background-color: #7a1820; 
-  border-color: #7a1820; 
+.leyenda-toggle {
+  align-self: flex-start; /* Mueve solo este botón a la izquierda */
+  margin-left: 1rem; /* opcional: separación desde el borde */
 }
 
-.estado-no-cumplida { 
-  background-color: #c27c00; 
-  border-color: #c27c00; 
+.leyenda-popover .estado-leyenda {
+  padding: 1rem;
+  max-width: 300px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  font-size: 13px;
 }
 
-.estado-abierta { 
-  background-color: #5bff5b; 
-  border-color: #5bff5b; 
+.estado-leyenda-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 120px;
 }
 
-.estado-cerrada { 
-  background-color: #545454; 
-  border-color: #545454; 
+.estado-cuadro {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  border: 1px solid transparent;
 }
 
-.estado-liquidada { 
-  background-color: #136a8a; 
-  border-color: #136a8a; 
-}
+/* Colores como antes */
+.estado-agendada { background-color: #1565c0; border-color: #1565c0; }
+.estado-cancelada { background-color: #b00020; border-color: #b00020; }
+.estado-cancelada-facturador { background-color: #7a1820; border-color: #7a1820; }
+.estado-no-cumplida { background-color: #c27c00; border-color: #c27c00; }
+.estado-abierta { background-color: #5bff5b; border-color: #5bff5b; }
+.estado-cerrada { background-color: #545454; border-color: #545454; }
+.estado-liquidada { background-color: #136a8a; border-color: #136a8a; }
+.estado-agrupada { background-color: #b38f00; border-color: #b38f00; }
+.estado-reagendada { background-color: #5a35bf; border-color: #5a35bf; }
+.estado-reabierta { background-color: #1f937d; border-color: #1f937d; }
 
-.estado-agrupada { 
-  background-color: #b38f00; 
-  border-color: #b38f00; 
-}
 
-.estado-reagendada { 
-  background-color: #5a35bf; 
-  border-color: #5a35bf; 
-}
 
-.estado-reabierta { 
-  background-color: #1f937d; 
-  border-color: #1f937d; 
-}
 
 /* =======================
    RESPONSIVE DESIGN

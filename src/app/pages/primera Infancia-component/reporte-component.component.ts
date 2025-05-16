@@ -19,6 +19,9 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ServiciosService } from '../../service/servicios-service.service';
 import { Servicio } from '../../model/Servicio';
 import { map } from 'rxjs';
+import { MatMenuModule } from '@angular/material/menu';
+
+
 
 @Component({
   selector: 'app-reporte-component',
@@ -36,7 +39,8 @@ import { map } from 'rxjs';
     ReactiveFormsModule,
     MatTabsModule,
     MatIconModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatMenuModule
   ],
   providers: [DatePipe],
   templateUrl: './reporte-component.component.html',
@@ -73,6 +77,7 @@ export class ReportePrimeraInfanciaComponent implements OnInit {
   private serviciosService = inject(ServiciosService);
   private snackBar = inject(MatSnackBar);
   private datePipe = inject(DatePipe);
+  mostrarLeyenda: any;
 
   ngOnInit(): void {
     this.cargarSucursales();
@@ -305,6 +310,24 @@ getColorByEstado(estado: string): string {
     default: return 'transparent';
   }
 }
+
+  // Lógica para alternar visibilidad (si la necesitas)
+  toggleLeyenda() {
+    this.mostrarLeyenda = !this.mostrarLeyenda;
+  }
+
+estados = [
+  { clase: 'agendada', nombre: 'Agendada' },
+  { clase: 'cancelada', nombre: 'Cancelada' },
+  { clase: 'cancelada-facturador', nombre: 'Cancelada facturador' },
+  { clase: 'no-cumplida', nombre: 'No cumplida' },
+  { clase: 'abierta', nombre: 'Abierta' },
+  { clase: 'cerrada', nombre: 'Cerrada' },
+  { clase: 'liquidada', nombre: 'Liquidada' },
+  { clase: 'agrupada', nombre: 'Agrupada' },
+  { clase: 'reagendada', nombre: 'Reagendada' },
+  { clase: 'reabierta', nombre: 'Reabierta' }
+];
 
 
 onFilaClick(idCita: number) {

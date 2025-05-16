@@ -8,13 +8,13 @@
         número identificacion y nombre del paciente, nombre del médico y numero del CUP
         profesional.</p>
     </div>
-  </div>
-
-  <div class="descargar-excel">
-    <a href="#" (click)="descargarArchivoExcel($event)" title="Descargar archivo Excel"
-      aria-label="Descargar archivo Excel">
-      <img src="excel_icon.png" alt="Ícono de Excel" width="40" height="40" />
-    </a>
+    <div class="descargar-excel">
+      <a href="#" (click)="descargarArchivoExcel($event)" title="Descargar archivo Excel"
+        aria-label="Descargar archivo Excel">
+        <img src="excel_icon.png" alt="Ícono de Excel" width="40" height="40" />
+        Descargar
+      </a>
+    </div>
   </div>
 
   <form [formGroup]="form">
@@ -98,86 +98,58 @@
     </mat-tab-group>
   </form>
 
-  <div class="boton-buscar-limpiar">
-    <button mat-raised-button color="primary" (click)="onSubmit()">
-      <mat-icon>search</mat-icon>
-      Buscar
+  <div class="contenedor-botones-leyenda">
+    <div class="boton-buscar-limpiar">
+      <button mat-raised-button color="primary" (click)="onSubmit()">
+        <mat-icon>search</mat-icon> Buscar
+      </button>
+
+      <button mat-stroked-button color="warn" (click)="limpiarFormulario()">
+        <mat-icon>clear</mat-icon> Limpiar
+      </button>
+    </div>
+
+    <button mat-button [matMenuTriggerFor]="menuLeyenda" class="leyenda-toggle">
+      <mat-icon>info</mat-icon> Ver leyenda de estados
     </button>
-
-    <button mat-stroked-button color="warn" (click)="limpiarFormulario()">
-      <mat-icon>clear</mat-icon>
-      Limpiar
-    </button>
   </div>
 
-  <div class="estado-leyenda">
-    <div class="estado-leyenda-item">
-      <div class="estado-cuadro estado-agendada"></div>
-      <span>Agendada</span>
+  <mat-menu #menuLeyenda="matMenu" class="leyenda-popover">
+    <div class="estado-leyenda">
+      <div class="estado-leyenda-item" *ngFor="let estado of estados">
+        <div class="estado-cuadro" [ngClass]="'estado-' + estado.clase"></div>
+        <span>{{ estado.nombre }}</span>
+      </div>
     </div>
-    <div class="estado-leyenda-item">
-      <div class="estado-cuadro estado-cancelada"></div>
-      <span>Cancelada</span>
-    </div>
-    <div class="estado-leyenda-item">
-      <div class="estado-cuadro estado-cancelada-facturador"></div>
-      <span>Cancelada facturador</span>
-    </div>
-    <div class="estado-leyenda-item">
-      <div class="estado-cuadro estado-no-cumplida"></div>
-      <span>No cumplida</span>
-    </div>
-    <div class="estado-leyenda-item">
-      <div class="estado-cuadro estado-abierta"></div>
-      <span>Abierta</span>
-    </div>
-    <div class="estado-leyenda-item">
-      <div class="estado-cuadro estado-cerrada"></div>
-      <span>Cerrada</span>
-    </div>
-    <div class="estado-leyenda-item">
-      <div class="estado-cuadro estado-liquidada"></div>
-      <span>Liquidada</span>
-    </div>
-    <div class="estado-leyenda-item">
-      <div class="estado-cuadro estado-agrupada"></div>
-      <span>Agrupada</span>
-    </div>
-    <div class="estado-leyenda-item">
-      <div class="estado-cuadro estado-reagendada"></div>
-      <span>Reagendada</span>
-    </div>
-    <div class="estado-leyenda-item">
-      <div class="estado-cuadro estado-reabierta"></div>
-      <span>Reabierta</span>
+  </mat-menu>
+
+
+
+  <div class="tabla-scrollable">
+    <!-- Tabla de datos -->
+    <div class="tabla-container">
+      <table mat-table [dataSource]="datos" class="mat-table" multiTemplateDataRows>
+
+        <!-- Columnas dinámicas -->
+        <ng-container *ngFor="let col of columnas" [matColumnDef]="col">
+          <th mat-header-cell *matHeaderCellDef class="encabezado-tabla">{{ col }}</th>
+          <td mat-cell *matCellDef="let row" class="fila-tabla">{{ row[col] }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+        <tr mat-row *matRowDef="let row; columns: columnas;" (click)="onFilaClick(row['id_cita'])"
+          [class.fila-iluminada]="selectedIdCita?.toString() === row['id_cita']?.toString()"
+          [ngStyle]="{'border-left': '10px solid ' + getColorByEstado(row['estado_cita'])}">
+        </tr>
+      </table>
     </div>
   </div>
-</div>
-<div class="tabla-scrollable">
-  <!-- Tabla de datos -->
-  <div class="tabla-container">
-    <table mat-table [dataSource]="datos" class="mat-table" multiTemplateDataRows>
-
-      <!-- Columnas dinámicas -->
-      <ng-container *ngFor="let col of columnas" [matColumnDef]="col">
-        <th mat-header-cell *matHeaderCellDef class="encabezado-tabla">{{ col }}</th>
-        <td mat-cell *matCellDef="let row" class="fila-tabla">{{ row[col] }}</td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="columnas"></tr>
-      <tr mat-row *matRowDef="let row; columns: columnas;" (click)="onFilaClick(row['id_cita'])"
-        [class.fila-iluminada]="selectedIdCita?.toString() === row['id_cita']?.toString()"
-        [ngStyle]="{'border-left': '10px solid ' + getColorByEstado(row['estado_cita'])}">
-      </tr>
-    </table>
-  </div>
-</div>
 
 
-<!-- Mensajes de estado -->
-<p *ngIf="cargado && !datos.length">No hay datos disponibles.</p>
+  <!-- Mensajes de estado -->
+  <p *ngIf="cargado && !datos.length">No hay datos disponibles.</p>
 
-<!-- Paginador -->
-<mat-paginator class="paginador-flotante" *ngIf="!isFiltering" [pageSizeOptions]="[5, 10, 25, 50, 100, 500, 1000]"
-  [pageSize]="pageSize" [length]="totalItems" (page)="cambiarPagina($event)" aria-label="Paginador de citas">
-</mat-paginator>
+  <!-- Paginador -->
+  <mat-paginator class="paginador-flotante" *ngIf="!isFiltering" [pageSizeOptions]="[5, 10, 25, 50, 100]"
+    [pageSize]="pageSize" [length]="totalItems" (page)="cambiarPagina($event)" aria-label="Paginador de citas">
+  </mat-paginator>
